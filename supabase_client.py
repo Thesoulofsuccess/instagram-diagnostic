@@ -156,7 +156,14 @@ def get_user_reels(user_id: str, access_token: str, refresh_token: str):
         client = _make_client(access_token, refresh_token)
         response = (
             client.table("reels")
-            .select("*")
+            .select(
+                "id, user_id, category, hook_type, hook_style, caption, "
+                "views, watch_time_minutes, reel_duration_seconds, "
+                "likes, comments, shares, saves, follower_count, "
+                "retention_ratio, retention_label, engagement_rate, "
+                "engagement_label, hook_score, hook_label, "
+                "save_rate, save_label, ai_report, created_at"
+            )
             .eq("user_id", user_id)
             .order("created_at", desc=True)
             .execute()

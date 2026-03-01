@@ -6,7 +6,6 @@ Requires at least MIN_REELS reels to generate meaningful patterns.
 
 from __future__ import annotations
 
-import os
 from typing import Optional
 
 MIN_REELS = 5  # minimum reels needed before patterns are shown

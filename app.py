@@ -1750,8 +1750,9 @@ def _prescore_ring_html(score: int, colour: str) -> str:
             <svg width="148" height="148" viewBox="0 0 148 148">
                 <defs>
                     <linearGradient id="{grad_id}" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stop-color="#FF00FF"/>
-                        <stop offset="100%" stop-color="#FF8C00"/>
+                        <stop offset="0%"   stop-color="#833AB4"/>
+                        <stop offset="50%"  stop-color="#E1306C"/>
+                        <stop offset="100%" stop-color="#FCB045"/>
                     </linearGradient>
                 </defs>
                 <circle class="prescore-ring-bg" cx="74" cy="74" r="{r}"/>
@@ -2238,6 +2239,13 @@ def render_weekly_digest():
         unsafe_allow_html=True,
     )
 
+    st.markdown(
+        '<div style="font-size:0.72rem;color:#555;margin-bottom:0.6rem;">'
+        '📅 Dates reflect when reels were imported into Reel IQ, '
+        'not their original publish date on Instagram.</div>',
+        unsafe_allow_html=True,
+    )
+
     # ── METRIC GRID ───────────────────────────────
     v_trend = _trend_label(d.get("view_trend"))
     r_trend = _trend_label(d.get("ret_trend"))
@@ -2386,8 +2394,9 @@ def _monthly_ring_html(score: int, colour: str) -> str:
         f'<div class="monthly-score-ring">'
         f'<svg width="88" height="88" viewBox="0 0 88 88">'
         f'<defs><linearGradient id="mRingGrad" x1="0%" y1="0%" x2="100%" y2="0%">'
-        f'<stop offset="0%" stop-color="#FF00FF"/>'
-        f'<stop offset="100%" stop-color="#FF8C00"/>'
+        f'<stop offset="0%"   stop-color="#833AB4"/>'
+        f'<stop offset="50%"  stop-color="#E1306C"/>'
+        f'<stop offset="100%" stop-color="#FCB045"/>'
         f'</linearGradient></defs>'
         f'<circle fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="6" cx="44" cy="44" r="{r}"/>'
         f'<circle fill="none" stroke="{stroke}" stroke-width="6" stroke-linecap="butt"'
@@ -2489,6 +2498,13 @@ def render_monthly_card():
             f'⚠ Fewer than 2 reels in {card["month_label"]} — showing all-time data</div>',
             unsafe_allow_html=True,
         )
+
+    st.markdown(
+        '<div style="font-size:0.72rem;color:#555;margin-bottom:0.8rem;">'
+        '📅 Dates reflect when reels were imported into Reel IQ, '
+        'not their original publish date on Instagram.</div>',
+        unsafe_allow_html=True,
+    )
 
     # ── MONTH HEADER WITH GROWTH SCORE RING ──────
     ring_html = _monthly_ring_html(card["growth_score"], card["score_colour"])

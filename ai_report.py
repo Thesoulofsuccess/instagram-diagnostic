@@ -241,22 +241,3 @@ IMPORTANT: This brief MUST use {best_hook} as the hook type and reference the cr
         return f"API ERROR: {e}"
 
 
-if __name__ == "__main__":
-    print("Running diagnostic...")
-    results = run_diagnostic(
-        views=1424,
-        watch_time_minutes=36,
-        reel_duration_seconds=14,
-        likes=18,
-        comments=2,
-        shares=1,
-        saves=0,
-        caption="Check out my latest interior design project! Swipe to see the full transformation.",
-        category="Aesthetic",
-        follower_count=800
-    )
-    print("Calling OpenAI...")
-    report = generate_ai_report(results)
-    with open("report_output.txt", "w", encoding="utf-8") as f:
-        f.write(report)
-    print(report)
