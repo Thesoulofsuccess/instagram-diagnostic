@@ -1,0 +1,5 @@
+streamlit
+python-dotenv
+openai
+supabase==2.0.3
+pandas
