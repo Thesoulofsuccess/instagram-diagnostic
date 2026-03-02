@@ -2121,7 +2121,7 @@ def render_content_brief():
 
     st.markdown("<div style='margin-top:0.9rem'></div>", unsafe_allow_html=True)
 
-    run_col, regen_col = st.columns([3, 1])
+    run_col, regen_col = st.columns([3, 1], vertical_alignment="center")
     with run_col:
         generate_clicked = st.button(
             "📝 Generate Content Brief",
