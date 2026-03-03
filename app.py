@@ -325,13 +325,69 @@ div[data-testid="stFileUploader"] label {
     color: rgba(255,255,255,0.55) !important;
     font-weight: 600 !important;
 }
+/* Browse files button — kill the white patch, replace with purple ghost */
+div[data-testid="stFileUploader"] button,
+section[data-testid="stFileUploadDropzone"] button {
+    background: rgba(131,58,180,0.14) !important;
+    border: 1px solid rgba(131,58,180,0.50) !important;
+    color: rgba(255,255,255,0.82) !important;
+    border-radius: 8px !important;
+    font-size: 0.74rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.06em !important;
+    transition: all 0.18s ease !important;
+}
+div[data-testid="stFileUploader"] button:hover,
+section[data-testid="stFileUploadDropzone"] button:hover {
+    background: rgba(131,58,180,0.26) !important;
+    border-color: rgba(131,58,180,0.80) !important;
+    color: #FFFFFF !important;
+}
 
 /* ══════════════════════════════════════
-   SEGMENTED CONTROL (Mode Toggle)
+   SEGMENTED CONTROL — st.segmented_control
+   (Streamlit ≥1.40 native premium widget)
+══════════════════════════════════════ */
+div[data-testid="stSegmentedControl"] {
+    background: #1A1A1A !important;
+    border: 1px solid rgba(255,255,255,0.10) !important;
+    border-radius: 10px !important;
+    padding: 4px !important;
+    gap: 3px !important;
+}
+div[data-testid="stSegmentedControl"] button {
+    background: transparent !important;
+    border: none !important;
+    color: rgba(255,255,255,0.65) !important;
+    font-size: 0.76rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.09em !important;
+    text-transform: uppercase !important;
+    border-radius: 7px !important;
+    padding: 9px 24px !important;
+    transition: all 0.18s ease !important;
+    white-space: nowrap !important;
+    height: auto !important;
+    min-height: 0 !important;
+    line-height: 1.2 !important;
+}
+div[data-testid="stSegmentedControl"] button[aria-checked="true"] {
+    background: linear-gradient(90deg, #833AB4 0%, #E1306C 50%, #FCB045 100%) !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 0 18px rgba(225,48,108,0.30), 0 2px 8px rgba(0,0,0,0.40) !important;
+}
+div[data-testid="stSegmentedControl"] button[aria-checked="false"]:hover {
+    background: rgba(255,255,255,0.06) !important;
+    color: rgba(255,255,255,0.90) !important;
+}
+
+/* ══════════════════════════════════════
+   SEGMENTED CONTROL — st.radio fallback
+   (Streamlit <1.40 — keep both so either works)
 ══════════════════════════════════════ */
 div[data-testid="stRadio"] div[role="radiogroup"] {
-    background: #111111;
-    border: 1px solid rgba(255,255,255,0.08);
+    background: #1A1A1A;
+    border: 1px solid rgba(255,255,255,0.10);
     border-radius: 10px;
     padding: 4px;
     display: flex;
@@ -339,61 +395,59 @@ div[data-testid="stRadio"] div[role="radiogroup"] {
     gap: 3px;
     width: fit-content;
 }
-div[data-testid="stRadio"] div[role="radiogroup"] > div {
+div[data-testid="stRadio"] div[role="radiogroup"] label {
     border-radius: 7px;
-    padding: 8px 22px;
-    transition: background 0.18s ease, box-shadow 0.18s ease;
+    padding: 9px 24px;
     cursor: pointer;
     display: flex;
     align-items: center;
+    transition: background 0.18s ease, box-shadow 0.18s ease;
 }
-/* Hide native radio circle */
 div[data-testid="stRadio"] [data-baseweb="radio"] > div:first-child {
     display: none !important;
     width: 0 !important;
     margin: 0 !important;
 }
-/* Inactive label text */
-div[data-testid="stRadio"] div[role="radiogroup"] > div p,
-div[data-testid="stRadio"] div[role="radiogroup"] > div label {
-    color: rgba(255,255,255,0.38) !important;
+div[data-testid="stRadio"] div[role="radiogroup"] p {
+    color: rgba(255,255,255,0.75) !important;
     font-size: 0.76rem !important;
     font-weight: 700 !important;
-    letter-spacing: 0.10em !important;
+    letter-spacing: 0.09em !important;
     text-transform: uppercase !important;
-    line-height: 1 !important;
     margin: 0 !important;
     cursor: pointer !important;
 }
-/* Active pill — IG gradient + glow */
-div[data-testid="stRadio"] div[role="radiogroup"] > div:has(input:checked) {
+div[data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked) {
     background: linear-gradient(90deg, #833AB4 0%, #E1306C 50%, #FCB045 100%);
-    box-shadow: 0 0 18px rgba(225,48,108,0.35), 0 2px 10px rgba(0,0,0,0.45);
+    box-shadow: 0 0 18px rgba(225,48,108,0.30), 0 2px 8px rgba(0,0,0,0.40);
 }
-div[data-testid="stRadio"] div[role="radiogroup"] > div:has(input:checked) p,
-div[data-testid="stRadio"] div[role="radiogroup"] > div:has(input:checked) label {
+div[data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked) p {
     color: #FFFFFF !important;
 }
 
 /* ══════════════════════════════════════
    DOWNLOAD BUTTON — GHOST STYLE
+   (broad selectors to survive Streamlit class changes)
 ══════════════════════════════════════ */
-div[data-testid="stDownloadButton"] > button {
+[data-testid="stDownloadButton"] button,
+div[data-testid="stDownloadButton"] button,
+.stDownloadButton button {
     background: transparent !important;
-    border: 1px solid rgba(255,255,255,0.22) !important;
-    color: rgba(255,255,255,0.70) !important;
+    border: 1px solid rgba(255,255,255,0.28) !important;
+    color: rgba(255,255,255,0.78) !important;
     border-radius: 8px !important;
     font-size: 0.72rem !important;
     font-weight: 600 !important;
     letter-spacing: 0.08em !important;
     text-transform: uppercase !important;
-    padding: 0.45rem 1rem !important;
+    padding: 0.5rem 1.1rem !important;
     transition: all 0.18s ease !important;
     width: 100% !important;
 }
-div[data-testid="stDownloadButton"] > button:hover {
-    background: rgba(255,255,255,0.07) !important;
-    border-color: rgba(255,255,255,0.48) !important;
+[data-testid="stDownloadButton"] button:hover,
+div[data-testid="stDownloadButton"] button:hover {
+    background: rgba(255,255,255,0.08) !important;
+    border-color: rgba(255,255,255,0.55) !important;
     color: #FFFFFF !important;
 }
 
@@ -1562,13 +1616,26 @@ def render_csv_import():
 # ─────────────────────────────────────────────────
 def render_single_reel():
     # ── Input mode toggle ──────────────────────────────────────────────
-    mode = st.radio(
-        "mode",
-        ["⌨️  Manual Entry", "📊  Import CSV"],
-        horizontal=True,
-        key="analyse_mode",
-        label_visibility="collapsed",
-    )
+    # Use st.segmented_control (Streamlit ≥1.40) for premium native styling;
+    # fall back to st.radio on older deployments.
+    try:
+        _sc = st.segmented_control(
+            "mode",
+            options=["⌨️  Manual Entry", "📊  Import CSV"],
+            default="⌨️  Manual Entry",
+            label_visibility="collapsed",
+            key="analyse_sc",
+        )
+        mode = _sc if _sc is not None else "⌨️  Manual Entry"
+    except AttributeError:
+        mode = st.radio(
+            "mode",
+            ["⌨️  Manual Entry", "📊  Import CSV"],
+            horizontal=True,
+            key="analyse_mode",
+            label_visibility="collapsed",
+        )
+
     st.markdown(
         "<div style='border-top:1px solid #1e1e1e;margin:0.75rem 0 1.5rem;'></div>",
         unsafe_allow_html=True,
