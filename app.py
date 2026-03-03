@@ -300,48 +300,132 @@ def inject_css():
 .import-note p:last-child { margin-bottom: 0; }
 
 /* ══════════════════════════════════════
-   FILE UPLOADER — PREMIUM DROP ZONE
+   FILE UPLOADER — PREMIUM DARK DROP ZONE
+   Kills every white bg layer Streamlit 1.54
+   injects, then rebuilds as a clean dark card.
 ══════════════════════════════════════ */
-section[data-testid="stFileUploadDropzone"] {
-    background: rgba(131,58,180,0.05) !important;
-    border: 1.5px dashed rgba(131,58,180,0.50) !important;
-    border-radius: 10px !important;
-    padding: 1.4rem !important;
-    transition: all 0.2s ease !important;
+
+/* Outer container — transparent */
+div[data-testid="stFileUploader"] {
+    background: transparent !important;
 }
-section[data-testid="stFileUploadDropzone"]:hover {
-    background: rgba(131,58,180,0.09) !important;
-    border-color: rgba(131,58,180,0.85) !important;
+
+/* Kill intermediate wrapper white backgrounds
+   (Streamlit 1.54 adds extra divs between the
+   outer container and the actual dropzone) */
+div[data-testid="stFileUploader"] > div,
+div[data-testid="stFileUploader"] > div > div {
+    background: transparent !important;
+    background-color: transparent !important;
 }
-div[data-testid="stFileUploader"] label {
+
+/* The drop zone card — dark, centered, dashed */
+section[data-testid="stFileUploadDropzone"],
+div[data-testid="stFileUploadDropzone"] {
+    background: #111111 !important;
+    background-color: #111111 !important;
+    border: 1.5px dashed rgba(255,255,255,0.16) !important;
+    border-radius: 14px !important;
+    padding: 2.6rem 1.5rem !important;
+    min-height: 170px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    transition: border-color 0.2s ease, background 0.2s ease !important;
+}
+section[data-testid="stFileUploadDropzone"]:hover,
+div[data-testid="stFileUploadDropzone"]:hover {
+    background: #161616 !important;
+    border-color: rgba(225,48,108,0.45) !important;
+}
+
+/* Inner content wrapper — also center */
+section[data-testid="stFileUploadDropzone"] > div,
+div[data-testid="stFileUploadDropzone"] > div {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    background: transparent !important;
+    width: 100% !important;
+}
+
+/* Cloud upload icon — pink/red glow */
+section[data-testid="stFileUploadDropzone"] svg,
+div[data-testid="stFileUploadDropzone"] svg {
+    width: 46px !important;
+    height: 46px !important;
+    color: #E1306C !important;
+    filter: drop-shadow(0 2px 12px rgba(225,48,108,0.45)) !important;
+    margin-bottom: 0.9rem !important;
+    flex-shrink: 0 !important;
+}
+
+/* Instructions container */
+[data-testid="stFileUploaderDropzoneInstructions"] {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 0.35rem !important;
+    text-align: center !important;
+}
+
+/* Primary instruction text — "Drag and drop file here" */
+[data-testid="stFileUploaderDropzoneInstructions"] span {
     color: #FFFFFF !important;
+    font-size: 0.96rem !important;
     font-weight: 700 !important;
-    font-size: 0.80rem !important;
-    letter-spacing: 0.07em !important;
-    text-transform: uppercase !important;
+    letter-spacing: 0.01em !important;
+    display: block !important;
 }
-[data-testid="stFileUploaderDropzoneInstructions"] span,
+
+/* Sub-text — "Limit 200MB per file • CSV" */
+[data-testid="stFileUploaderDropzoneInstructions"] small,
+[data-testid="stFileUploaderDropzoneInstructions"] span + span,
 [data-testid="stFileUploaderDropzoneInstructions"] p {
-    color: rgba(255,255,255,0.55) !important;
-    font-weight: 600 !important;
-}
-/* Browse files button — kill the white patch, replace with purple ghost */
-div[data-testid="stFileUploader"] button,
-section[data-testid="stFileUploadDropzone"] button {
-    background: rgba(131,58,180,0.14) !important;
-    border: 1px solid rgba(131,58,180,0.50) !important;
-    color: rgba(255,255,255,0.82) !important;
-    border-radius: 8px !important;
+    color: rgba(255,255,255,0.36) !important;
     font-size: 0.74rem !important;
+    font-weight: 400 !important;
+}
+
+/* Browse files button — subtle ghost */
+section[data-testid="stFileUploadDropzone"] button,
+div[data-testid="stFileUploadDropzone"] button,
+div[data-testid="stFileUploader"] button {
+    background: transparent !important;
+    border: 1px solid rgba(255,255,255,0.18) !important;
+    color: rgba(255,255,255,0.55) !important;
+    border-radius: 8px !important;
+    font-size: 0.72rem !important;
     font-weight: 600 !important;
     letter-spacing: 0.06em !important;
+    margin-top: 0.9rem !important;
     transition: all 0.18s ease !important;
 }
-div[data-testid="stFileUploader"] button:hover,
-section[data-testid="stFileUploadDropzone"] button:hover {
-    background: rgba(131,58,180,0.26) !important;
-    border-color: rgba(131,58,180,0.80) !important;
-    color: #FFFFFF !important;
+section[data-testid="stFileUploadDropzone"] button:hover,
+div[data-testid="stFileUploadDropzone"] button:hover,
+div[data-testid="stFileUploader"] button:hover {
+    background: rgba(255,255,255,0.07) !important;
+    border-color: rgba(255,255,255,0.40) !important;
+    color: rgba(255,255,255,0.90) !important;
+}
+
+/* Uploaded file row (filename + X button) */
+[data-testid="stFileUploaderFile"],
+div[data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] {
+    background: #111111 !important;
+    border: 1px solid rgba(255,255,255,0.08) !important;
+    border-radius: 8px !important;
+    padding: 0.5rem 0.75rem !important;
+    margin-top: 0.5rem !important;
+}
+[data-testid="stFileUploaderFile"] span,
+[data-testid="stFileUploaderFile"] p {
+    color: rgba(255,255,255,0.65) !important;
+    font-size: 0.80rem !important;
 }
 
 /* ══════════════════════════════════════
