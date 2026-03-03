@@ -647,14 +647,111 @@ div.ghost-btn > div > button:hover, div.ghost-btn button:hover {
 .stProgress > div { background: rgba(255,255,255,0.05) !important; border-radius: 0 !important; }
 
 /* ──────────────────────────────────────────────────────
-   FILE UPLOADER
+   FILE UPLOADER — nuclear dark override
 ────────────────────────────────────────────────────── */
-[data-testid="stFileUploader"] {
-    background: rgba(255,255,255,0.018) !important;
-    border: 1px dashed rgba(131,58,180,0.28) !important;
-    border-radius: 8px !important; transition: border-color 0.2s !important;
+[data-testid="stFileUploader"],
+[data-testid="stFileUploader"] > *,
+[data-testid="stFileUploader"] > * > * {
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
 }
-[data-testid="stFileUploader"]:hover { border-color: rgba(131,58,180,0.50) !important; }
+/* The actual drop zone */
+[data-testid="stFileUploadDropzone"],
+section[data-testid="stFileUploadDropzone"] {
+    background: #111111 !important;
+    background-color: #111111 !important;
+    border: 1.5px dashed rgba(131,58,180,0.32) !important;
+    border-radius: 10px !important;
+    padding: 2.2rem 1.5rem !important;
+    text-align: center !important;
+    transition: border-color 0.2s ease, background 0.2s ease !important;
+}
+[data-testid="stFileUploadDropzone"]:hover,
+section[data-testid="stFileUploadDropzone"]:hover {
+    background: #161616 !important;
+    border-color: rgba(225,48,108,0.50) !important;
+}
+/* All inner wrappers transparent */
+[data-testid="stFileUploadDropzone"] > *,
+section[data-testid="stFileUploadDropzone"] > * {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+/* Upload icon */
+[data-testid="stFileUploadDropzone"] svg,
+section[data-testid="stFileUploadDropzone"] svg {
+    color: rgba(131,58,180,0.70) !important;
+    width: 38px !important; height: 38px !important;
+    margin-bottom: 0.6rem !important;
+}
+/* Instruction text */
+[data-testid="stFileUploaderDropzoneInstructions"] {
+    display: flex !important; flex-direction: column !important;
+    align-items: center !important; gap: 0.25rem !important;
+    background: transparent !important;
+}
+[data-testid="stFileUploaderDropzoneInstructions"] span {
+    color: rgba(255,255,255,0.65) !important;
+    font-size: 0.82rem !important; font-weight: 600 !important;
+}
+[data-testid="stFileUploaderDropzoneInstructions"] small,
+[data-testid="stFileUploaderDropzoneInstructions"] span + span {
+    color: rgba(255,255,255,0.28) !important;
+    font-size: 0.68rem !important; font-weight: 400 !important;
+}
+/* Browse button — inline ghost link style */
+[data-testid="stFileUploadDropzone"] button,
+section[data-testid="stFileUploadDropzone"] button,
+[data-testid="stFileUploader"] button {
+    background: transparent !important;
+    border: 1px solid rgba(131,58,180,0.40) !important;
+    color: rgba(170,100,220,0.85) !important;
+    border-radius: 6px !important;
+    font-size: 0.68rem !important; font-weight: 600 !important;
+    letter-spacing: 0.08em !important;
+    padding: 0.28rem 0.9rem !important;
+    margin-top: 0.65rem !important;
+    height: auto !important; min-height: 0 !important;
+    transition: all 0.18s ease !important;
+    text-transform: uppercase !important;
+}
+[data-testid="stFileUploadDropzone"] button:hover,
+[data-testid="stFileUploader"] button:hover {
+    background: rgba(131,58,180,0.10) !important;
+    border-color: rgba(131,58,180,0.65) !important;
+    color: rgba(200,140,255,0.95) !important;
+}
+
+/* ──────────────────────────────────────────────────────
+   TABS — kill the white scroll-overflow arrow
+────────────────────────────────────────────────────── */
+.stTabs [data-baseweb="tab-list"] button,
+.stTabs [data-baseweb="tab-list"] > button {
+    background: #111111 !important;
+    background-color: #111111 !important;
+    border: none !important;
+    color: rgba(255,255,255,0.40) !important;
+    box-shadow: none !important;
+}
+/* BaseUI overflow scroll arrows that appear beside tab list */
+[data-baseweb="tab-list"] ~ button,
+[data-baseweb="tab-list"] + button,
+button[data-testid="stTabsScrollButton"],
+div[data-testid="stTabs"] > div > button {
+    background: #111111 !important;
+    background-color: #111111 !important;
+    border: none !important;
+    color: rgba(255,255,255,0.35) !important;
+    box-shadow: none !important;
+}
+/* The stTabs outer wrapper — kill any white bleed */
+div[data-testid="stTabs"],
+div[data-testid="stTabs"] > div {
+    background: transparent !important;
+    background-color: transparent !important;
+}
 
 /* ──────────────────────────────────────────────────────
    MISC
