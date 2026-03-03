@@ -477,6 +477,28 @@ div[data-testid="stTextArea"] > div > div {
 }
 
 /* ══════════════════════════════════════
+   PASSWORD EYE ICON — native Streamlit toggle
+══════════════════════════════════════ */
+/* Container holds the input + the native eye button */
+div[data-testid="stTextInput"] > div > div[data-baseweb="input"] {
+    position: relative;
+}
+/* Style the native eye-icon button Streamlit injects into password fields */
+div[data-testid="stTextInput"] button[kind="secondary"],
+div[data-testid="stTextInput"] button[aria-label*="assword"],
+div[data-testid="stTextInput"] > div > div > div > button {
+    background: transparent !important;
+    border: none !important;
+    color: rgba(131,58,180,0.85) !important;
+    padding: 0 0.5rem !important;
+    transition: color 0.2s ease !important;
+}
+div[data-testid="stTextInput"] > div > div > div > button:hover {
+    color: #E1306C !important;
+    background: transparent !important;
+}
+
+/* ══════════════════════════════════════
    TAB OVERFLOW — hide white patch
 ══════════════════════════════════════ */
 .stTabs [data-baseweb="tab-list"] button:not([role="tab"]) {
@@ -1273,10 +1295,9 @@ def render_auth_page():
                     li_email = st.text_input(
                         "Email Address", placeholder="name@example.com", key="li_email"
                     )
-                    show_li = st.checkbox("Show password", key="show_li")
                     li_pass = st.text_input(
                         "Password",
-                        type="text" if show_li else "password",
+                        type="password",
                         placeholder="Enter your password",
                         key="li_pass",
                     )
@@ -1313,16 +1334,15 @@ def render_auth_page():
                     su_email = st.text_input(
                         "Email Address", placeholder="name@example.com", key="su_email"
                     )
-                    show_su = st.checkbox("Show passwords", key="show_su")
                     su_pass1 = st.text_input(
                         "Create Password",
-                        type="text" if show_su else "password",
+                        type="password",
                         placeholder="8+ characters",
                         key="su_pass1",
                     )
                     su_pass2 = st.text_input(
                         "Confirm Password",
-                        type="text" if show_su else "password",
+                        type="password",
                         placeholder="Repeat password",
                         key="su_pass2",
                     )
