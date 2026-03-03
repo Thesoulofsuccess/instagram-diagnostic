@@ -447,6 +447,45 @@ div[data-testid="stDownloadButton"] button:hover {
 }
 
 /* ══════════════════════════════════════
+   AUDIENCE ACTION BREAKDOWN CARD
+   Per-100-viewer mini-bars + coaching tip
+   replaces raw engagement % in insight block
+══════════════════════════════════════ */
+.eng-breakdown { margin-top: 1.1rem; }
+.eng-row {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-bottom: 0.52rem;
+}
+.eng-icon { font-size: 0.80rem; width: 1.1rem; text-align: center; flex-shrink: 0; }
+.eng-name {
+    font-size: 0.62rem; font-weight: 700;
+    letter-spacing: 0.07em; text-transform: uppercase;
+    color: rgba(255,255,255,0.42); width: 4.6rem; flex-shrink: 0;
+}
+.eng-bar-wrap {
+    flex: 1; background: rgba(255,255,255,0.07);
+    border-radius: 3px; height: 5px; overflow: hidden;
+}
+.eng-bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
+.eng-val {
+    font-size: 0.70rem; font-weight: 700;
+    color: rgba(255,255,255,0.70); width: 3.8rem;
+    text-align: right; flex-shrink: 0;
+}
+.eng-star { font-size: 0.62rem; color: #00E5A0; flex-shrink: 0; }
+.eng-coaching {
+    margin-top: 0.95rem;
+    padding: 0.60rem 0.80rem;
+    background: rgba(255,255,255,0.04);
+    border-left: 2px solid rgba(131,58,180,0.55);
+    border-radius: 0 6px 6px 0;
+    font-size: 0.76rem; color: rgba(255,255,255,0.62); line-height: 1.55;
+}
+.eng-coaching strong { color: rgba(255,255,255,0.90); font-weight: 700; }
+
+/* ══════════════════════════════════════
    TEMPLATE DOWNLOAD — INLINE TOGGLE ROW
    Tiny ghost pill, vertically centred
    beside the Manual Entry / Import CSV
@@ -1784,8 +1823,8 @@ def render_single_reel():
                 <span class="score-tag">{retention['label']}</span>
             </div>
             <div class="score-card {e_tier}">
-                <div class="score-label">Engagement</div>
-                <div class="score-value">{round(engagement['rate']*100, 1)}%</div>
+                <div class="score-label">Audience Action</div>
+                <div class="score-value">{int(round(engagement['per100']['total']))}<span style="font-size:0.85rem;opacity:0.38;font-weight:500;letter-spacing:0.01em"> in 100</span></div>
                 <span class="score-tag">{engagement['label']}</span>
             </div>
             <div class="score-card {h_tier}">
@@ -1817,14 +1856,64 @@ def render_single_reel():
         st.markdown("<br>", unsafe_allow_html=True)
         st.markdown('<div class="section-label">04 — Score Breakdown</div>', unsafe_allow_html=True)
 
+        # ── Build Audience Action breakdown HTML ───────────────────────────
+        _p   = engagement["per100"]
+        _dom = engagement["dominant_signal"]
+        _tip = engagement["coaching_tip"]
+
+        def _eng_bar(val, max_val, colour):
+            pct = min(100, round(val / max_val * 100)) if max_val > 0 else 0
+            return (f'<div class="eng-bar-fill" '
+                    f'style="width:{pct}%;background:{colour};"></div>')
+
+        def _eng_star(signal):
+            return '<span class="eng-star">⭐</span>' if _dom == signal else ''
+
+        _rows_html = f"""
+        <div class="eng-row">
+            <span class="eng-icon">👍</span>
+            <span class="eng-name">Likes</span>
+            <div class="eng-bar-wrap">{_eng_bar(_p['likes'],    15, '#833AB4')}</div>
+            <span class="eng-val">{_p['likes']} /100</span>
+            {_eng_star('likes')}
+        </div>
+        <div class="eng-row">
+            <span class="eng-icon">💬</span>
+            <span class="eng-name">Comments</span>
+            <div class="eng-bar-wrap">{_eng_bar(_p['comments'],  5, '#E1306C')}</div>
+            <span class="eng-val">{_p['comments']} /100</span>
+            {_eng_star('comments')}
+        </div>
+        <div class="eng-row">
+            <span class="eng-icon">↗️</span>
+            <span class="eng-name">Shares</span>
+            <div class="eng-bar-wrap">{_eng_bar(_p['shares'],    5, '#FCAF45')}</div>
+            <span class="eng-val">{_p['shares']} /100</span>
+            {_eng_star('shares')}
+        </div>
+        <div class="eng-row">
+            <span class="eng-icon">🔖</span>
+            <span class="eng-name">Saves</span>
+            <div class="eng-bar-wrap">{_eng_bar(_p['saves'],     8, '#00E5A0')}</div>
+            <span class="eng-val">{_p['saves']} /100</span>
+            {_eng_star('saves')}
+        </div>
+        """
+        _coaching_html = (
+            f'<div class="eng-coaching">💡 <strong>Coach tip:</strong> {_tip}</div>'
+        )
+        _eng_breakdown_html = (
+            f'<div class="eng-breakdown">{_rows_html}{_coaching_html}</div>'
+        )
+
         st.markdown(f"""
         <div class="insight-block {r_tier}">
             <div class="insight-title">Retention Analysis</div>
             <div class="insight-text">{retention['explanation']}</div>
         </div>
         <div class="insight-block {e_tier}">
-            <div class="insight-title">Engagement Analysis</div>
-            <div class="insight-text">{engagement['explanation']}</div>
+            <div class="insight-title">Audience Action Breakdown</div>
+            {_eng_breakdown_html}
         </div>
         <div class="insight-block {h_tier}">
             <div class="insight-title">Hook Analysis</div>

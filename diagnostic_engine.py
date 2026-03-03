@@ -65,7 +65,8 @@ def calculate_engagement_rate(views, likes, comments, shares, saves):
     return round(total_interactions / views, 4)
 
 
-def score_engagement(engagement_rate, follower_count):
+def score_engagement(engagement_rate, follower_count,
+                     views=0, likes=0, comments=0, shares=0, saves=0):
     if follower_count < 1000:
         tier = "under_1k"
     elif follower_count < 5000:
@@ -85,7 +86,64 @@ def score_engagement(engagement_rate, follower_count):
     else:
         label = "Good"
         explanation = "Engagement rate of " + str(round(engagement_rate * 100, 1)) + "% is strong for your follower tier. Your content is resonating well with your audience."
-    return {"label": label, "explanation": explanation, "rate": engagement_rate}
+
+    # ── Per-100-viewer breakdown ───────────────────────────────────────────
+    if views > 0:
+        per100 = {
+            "likes":    round(likes    / views * 100, 1),
+            "comments": round(comments / views * 100, 1),
+            "shares":   round(shares   / views * 100, 1),
+            "saves":    round(saves    / views * 100, 1),
+            "total":    round(engagement_rate * 100, 1),
+        }
+    else:
+        per100 = {"likes": 0.0, "comments": 0.0, "shares": 0.0, "saves": 0.0, "total": 0.0}
+
+    # ── Dominant signal + coaching tip ────────────────────────────────────
+    save_p    = per100["saves"]
+    share_p   = per100["shares"]
+    comment_p = per100["comments"]
+    like_p    = per100["likes"]
+
+    if save_p >= 3:
+        dominant_signal = "saves"
+        coaching_tip = (
+            "People are bookmarking this — they plan to return and act on it. "
+            "Make sure your bio link or offer is front and centre so they can find it easily."
+        )
+    elif share_p >= 2:
+        dominant_signal = "shares"
+        coaching_tip = (
+            "People are actively spreading this content — you've hit a relatable nerve. "
+            "Double down on this topic or format in your next reel."
+        )
+    elif comment_p >= 1:
+        dominant_signal = "comments"
+        coaching_tip = (
+            "This content is sparking real conversation. "
+            "Reply to every comment within the first hour — it signals the algorithm to push your reel to more people."
+        )
+    elif like_p >= 4:
+        dominant_signal = "likes"
+        coaching_tip = (
+            "You're getting likes but not saves or shares yet. "
+            "Try ending your next reel with a specific ask: 'Save this for later' or 'Send this to someone who needs it'."
+        )
+    else:
+        dominant_signal = "none"
+        coaching_tip = (
+            "No strong action signal yet — that's fixable. "
+            "In your next reel, close with one clear ask: 'Save this', 'Share with a friend', or 'Drop a comment below'."
+        )
+
+    return {
+        "label":           label,
+        "explanation":     explanation,
+        "rate":            engagement_rate,
+        "per100":          per100,
+        "dominant_signal": dominant_signal,
+        "coaching_tip":    coaching_tip,
+    }
 
 
 def score_hook(caption):
@@ -351,7 +409,8 @@ def run_diagnostic(views, watch_time_minutes, reel_duration_seconds,
         "retention": score_retention(retention_ratio, category),
         "engagement": score_engagement(
             calculate_engagement_rate(views, likes, comments, shares, saves),
-            follower_count
+            follower_count,
+            views=views, likes=likes, comments=comments, shares=shares, saves=saves,
         ),
         "hook": score_hook(caption),
         "save_rate": score_save_rate(views, saves),
