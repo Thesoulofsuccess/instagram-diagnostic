@@ -447,6 +447,38 @@ div[data-testid="stDownloadButton"] button:hover {
 }
 
 /* ══════════════════════════════════════
+   TEMPLATE DOWNLOAD — INLINE TOGGLE ROW
+   Tiny ghost pill, vertically centred
+   beside the Manual Entry / Import CSV
+   segmented control.
+══════════════════════════════════════ */
+div.tpl-btn-wrap {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    height: 100% !important;
+    padding-top: 0.15rem !important;
+}
+div.tpl-btn-wrap [data-testid="stDownloadButton"] button,
+div.tpl-btn-wrap div[data-testid="stDownloadButton"] button {
+    font-size: 0.58rem !important;
+    letter-spacing: 0.10em !important;
+    padding: 0.26rem 0.7rem !important;
+    height: auto !important;
+    min-height: 0 !important;
+    border-color: rgba(255,255,255,0.15) !important;
+    color: rgba(255,255,255,0.38) !important;
+    border-radius: 5px !important;
+    white-space: nowrap !important;
+}
+div.tpl-btn-wrap [data-testid="stDownloadButton"] button:hover,
+div.tpl-btn-wrap div[data-testid="stDownloadButton"] button:hover {
+    border-color: rgba(255,255,255,0.35) !important;
+    color: rgba(255,255,255,0.75) !important;
+    background: rgba(255,255,255,0.04) !important;
+}
+
+/* ══════════════════════════════════════
    INPUT FIELD WEIGHT
 ══════════════════════════════════════ */
 div[data-testid="stNumberInput"] > div {
@@ -1404,19 +1436,6 @@ def render_csv_import():
         label_visibility="collapsed",
     )
 
-    # Template download — centered ghost button below the drop zone
-    st.markdown("<div style='margin-top:0.4rem;'></div>", unsafe_allow_html=True)
-    _, _tpl_center, _ = st.columns([2, 1, 2])
-    with _tpl_center:
-        st.download_button(
-            label="↓  Download Template",
-            data=generate_csv_template(),
-            file_name="reeliq_import_template.csv",
-            mime="text/csv",
-            use_container_width=True,
-            key="tpl_dl_csv",
-        )
-
     if uploaded is None:
         st.markdown("""
         <div style="text-align:center; padding: 2.75rem 1rem; color:rgba(255,255,255,0.15); font-size:0.82rem;">
@@ -1631,19 +1650,31 @@ def render_csv_import():
 # SINGLE REEL DIAGNOSTIC TAB
 # ─────────────────────────────────────────────────
 def render_single_reel():
-    # ── Input mode toggle ──────────────────────────────────────────────
-    # Rendered as a styled st.radio inside a scoped CSS wrapper div.
-    # The .riq-toggle-wrap CSS turns it into a dark segmented control.
-    st.markdown('<div class="riq-toggle-wrap">', unsafe_allow_html=True)
-    mode = st.radio(
-        "Input mode",
-        options=["Manual Entry", "Import CSV"],
-        index=0,
-        horizontal=True,
-        key="analyse_mode",
-        label_visibility="collapsed",
-    )
-    st.markdown('</div>', unsafe_allow_html=True)
+    # ── Input mode toggle + Download Template (inline right) ──────────
+    _toggle_col, _tpl_col = st.columns([5, 1])
+    with _toggle_col:
+        st.markdown('<div class="riq-toggle-wrap">', unsafe_allow_html=True)
+        mode = st.radio(
+            "Input mode",
+            options=["Manual Entry", "Import CSV"],
+            index=0,
+            horizontal=True,
+            key="analyse_mode",
+            label_visibility="collapsed",
+        )
+        st.markdown('</div>', unsafe_allow_html=True)
+    with _tpl_col:
+        if mode == "Import CSV":
+            st.markdown('<div class="tpl-btn-wrap">', unsafe_allow_html=True)
+            st.download_button(
+                label="↓ Template",
+                data=generate_csv_template(),
+                file_name="reeliq_import_template.csv",
+                mime="text/csv",
+                use_container_width=True,
+                key="tpl_dl_csv",
+            )
+            st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown(
         "<div style='border-top:1px solid #1e1e1e;margin:0.75rem 0 1.5rem;'></div>",
