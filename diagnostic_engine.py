@@ -141,6 +141,196 @@ def score_save_rate(views, saves):
     return {"rate": round(save_rate, 4), "label": label, "explanation": explanation}
 
 
+def score_business_interest(views, saves, shares, comments, follower_count):
+    """
+    Detects whether saves + shares signal inbound business DM interest.
+    Saves = intent to return (purchase/reference).
+    Shares = forwarding to others (referral, business vetting).
+    High combined = brand scouts, potential partners, clients researching.
+    """
+    if views == 0:
+        return {
+            "level": "Unknown",
+            "score": 0,
+            "dm_likelihood": "Unknown",
+            "explanation": "No views data — cannot assess business interest.",
+            "signals": [],
+            "save_rate": 0,
+            "share_rate": 0,
+        }
+
+    save_rate = saves / views
+    share_rate = shares / views
+    comment_rate = comments / views
+
+    signals = []
+    score = 0
+
+    # Save signals (purchase intent, reference saving)
+    if save_rate >= 0.05:
+        score += 4
+        signals.append("Very high save rate (" + str(round(save_rate * 100, 1)) + "%) — audience bookmarking for future purchase or reference")
+    elif save_rate >= 0.03:
+        score += 3
+        signals.append("Strong save rate (" + str(round(save_rate * 100, 1)) + "%) — significant portion saving your content for later")
+    elif save_rate >= 0.015:
+        score += 2
+        signals.append("Moderate saves (" + str(round(save_rate * 100, 1)) + "%) — some viewers treating content as reference material")
+
+    # Share signals (referral, business forwarding)
+    if share_rate >= 0.03:
+        score += 4
+        signals.append("Very high share rate (" + str(round(share_rate * 100, 1)) + "%) — content being forwarded to business contacts and teams")
+    elif share_rate >= 0.015:
+        score += 3
+        signals.append("Strong share rate (" + str(round(share_rate * 100, 1)) + "%) — audience actively forwarding to colleagues or clients")
+    elif share_rate >= 0.007:
+        score += 2
+        signals.append("Moderate shares (" + str(round(share_rate * 100, 1)) + "%) — some viewers sharing with their networks")
+
+    # Comment signals (questions = DM trigger)
+    if comment_rate >= 0.02:
+        score += 2
+        signals.append("High comment rate (" + str(round(comment_rate * 100, 1)) + "%) — audience asking questions, a strong precursor to DMs")
+    elif comment_rate >= 0.01:
+        score += 1
+        signals.append("Moderate comments (" + str(round(comment_rate * 100, 1)) + "%) — some interaction beyond passive viewing")
+
+    score = min(score, 10)
+
+    if score >= 7:
+        level = "High"
+        dm_likelihood = "Very Likely"
+        explanation = (
+            "Strong business DM signals detected. Your save and share rates indicate brands, agencies, or buyers in your "
+            "audience are actively researching you. Ensure your bio has a clear offer, link, or contact email — "
+            "these viewers are ready to reach out."
+        )
+    elif score >= 4:
+        level = "Medium"
+        dm_likelihood = "Likely"
+        explanation = (
+            "Moderate business interest detected. Save and share patterns suggest professional audience members are "
+            "bookmarking your content. Adding a clear offer or CTA in your bio would convert these passive signals into DMs."
+        )
+    elif score >= 2:
+        level = "Low"
+        dm_likelihood = "Possible"
+        explanation = (
+            "Low business interest signals in this reel. Your saves and shares are below the threshold that typically "
+            "triggers inbound brand DMs. Getting your save rate above 3% is the primary lever for attracting business enquiries."
+        )
+    else:
+        level = "None"
+        dm_likelihood = "Unlikely"
+        explanation = (
+            "No significant business interest signals detected. Saves and shares are too low to generate DM activity. "
+            "Focus on delivering reference-worthy, high-value content that viewers want to save and send to others."
+        )
+
+    return {
+        "level": level,
+        "score": score,
+        "dm_likelihood": dm_likelihood,
+        "explanation": explanation,
+        "signals": signals,
+        "save_rate": round(save_rate, 4),
+        "share_rate": round(share_rate, 4),
+    }
+
+
+def segment_audience(views, likes, comments, shares, saves, follower_count, category):
+    """
+    Categorises a creator's audience into buyer segments based on engagement patterns.
+
+    Segments (from highest to lowest purchase intent):
+    - Hot Buyers: high saves + engagement — purchase or booking intent
+    - Brand Partners: high shares — brand scouts, agency researchers, referral behaviour
+    - Warm Followers: medium engagement, low saves — nurturing phase
+    - Passive Viewers: low engagement — awareness only
+    """
+    if views == 0:
+        return []
+
+    save_rate = saves / views
+    share_rate = shares / views
+    comment_rate = comments / views
+    like_rate = likes / views
+    engagement_rate = (likes + comments + shares + saves) / views
+
+    hot_pct = 0
+    brand_pct = 0
+    warm_pct = 0
+
+    # Hot Buyers — save-heavy with engagement
+    if save_rate >= 0.03 and engagement_rate >= 0.05:
+        hot_pct = min(int(save_rate * 200), 30)
+    elif save_rate >= 0.02:
+        hot_pct = min(int(save_rate * 150), 20)
+    elif save_rate >= 0.01:
+        hot_pct = min(int(save_rate * 100), 10)
+
+    # Brand Partners — share-heavy
+    if share_rate >= 0.02:
+        brand_pct = min(int(share_rate * 200), 20)
+    elif share_rate >= 0.01:
+        brand_pct = min(int(share_rate * 150), 12)
+    elif share_rate >= 0.005:
+        brand_pct = min(int(share_rate * 120), 6)
+
+    # Warm Followers — likes + comments but low saves
+    if like_rate >= 0.04 and save_rate < 0.02:
+        warm_pct = min(int(like_rate * 150), 35)
+    elif comment_rate >= 0.01:
+        warm_pct = min(int(comment_rate * 300), 25)
+
+    passive_pct = max(0, 100 - hot_pct - brand_pct - warm_pct)
+
+    segments = []
+
+    if hot_pct > 0:
+        segments.append({
+            "name": "Hot Buyers",
+            "icon": "🔥",
+            "pct": hot_pct,
+            "colour": "#00E5A0",
+            "description": f"~{hot_pct}% of viewers show purchase intent — they saved your content, signalling they plan to return and act.",
+            "advice": "Put your offer, booking link, or product in your bio and first comment. These viewers are ready to convert — don't make them search.",
+        })
+
+    if brand_pct > 0:
+        segments.append({
+            "name": "Brand Partners",
+            "icon": "🤝",
+            "pct": brand_pct,
+            "colour": "#7DFFCC",
+            "description": f"~{brand_pct}% are sharing your content with others — typical of brand scouts, agency researchers, or business owners vetting collaborators.",
+            "advice": "Add a 'Collabs & Partnerships' line to your bio. These viewers are most likely to send a business DM or propose a paid deal.",
+        })
+
+    if warm_pct > 0:
+        segments.append({
+            "name": "Warm Followers",
+            "icon": "💛",
+            "pct": warm_pct,
+            "colour": "#FFB020",
+            "description": f"~{warm_pct}% are engaged but not yet converting — they like and comment but haven't saved. They're in the consideration phase.",
+            "advice": "Nurture with social proof content: testimonials, client results, before/after. They need one more trust signal before converting.",
+        })
+
+    if passive_pct > 0:
+        segments.append({
+            "name": "Passive Viewers",
+            "icon": "👀",
+            "pct": passive_pct,
+            "colour": "#4A4A6A",
+            "description": f"~{passive_pct}% watched but took no action. This is expected — not all viewers are buyers.",
+            "advice": "Re-hook this group with a CTA in your next reel: 'Save this for later' or 'Send this to someone who needs it'.",
+        })
+
+    return segments
+
+
 def run_diagnostic(views, watch_time_minutes, reel_duration_seconds,
                    likes, comments, shares, saves,
                    caption, category, follower_count):
@@ -164,6 +354,8 @@ def run_diagnostic(views, watch_time_minutes, reel_duration_seconds,
             follower_count
         ),
         "hook": score_hook(caption),
-        "save_rate": score_save_rate(views, saves)
+        "save_rate": score_save_rate(views, saves),
+        "business_interest": score_business_interest(views, saves, shares, comments, follower_count),
+        "audience_segments": segment_audience(views, likes, comments, shares, saves, follower_count, category),
     }
     return results

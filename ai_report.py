@@ -24,10 +24,27 @@ def generate_ai_report(diagnostic_results):
     engagement = diagnostic_results["engagement"]
     hook = diagnostic_results["hook"]
     save_rate = diagnostic_results["save_rate"]
+    business_interest = diagnostic_results.get("business_interest", {})
+    audience_segments = diagnostic_results.get("audience_segments", [])
+
+    # Build audience segment summary for prompt
+    segment_lines = ""
+    if audience_segments:
+        segment_lines = "\nAUDIENCE COMPOSITION:\n"
+        for seg in audience_segments:
+            segment_lines += f"- {seg['name']} ({seg['pct']}%): {seg['description']}\n"
+
+    # Build business interest summary for prompt
+    bi_level = business_interest.get("level", "Unknown")
+    bi_dm = business_interest.get("dm_likelihood", "Unknown")
+    bi_signals = business_interest.get("signals", [])
+    bi_signals_text = ""
+    if bi_signals:
+        bi_signals_text = "\nBusiness Interest Signals Detected:\n" + "\n".join(f"  • {s}" for s in bi_signals)
 
     prompt = (
         "You are a content performance analyst helping a small business owner "
-        "understand why their Instagram Reel underperformed. "
+        "understand why their Instagram Reel performed the way it did and how to increase sales. "
         "Write a clear, specific, plain-language diagnostic report. "
         "No jargon. Every recommendation must reference a specific metric.\n\n"
         "CONTENT DETAILS:\n"
@@ -40,6 +57,11 @@ def generate_ai_report(diagnostic_results):
         "Engagement Rate: " + engagement['label'] + " (" + str(round(engagement['rate'] * 100, 1)) + "%)\n"
         "Hook Strength: " + hook['label'] + " (" + str(hook['score']) + "/10)\n"
         "Save Rate: " + save_rate['label'] + " (" + str(round(save_rate['rate'] * 100, 1)) + "%)\n\n"
+        "BUSINESS INTEREST SIGNALS:\n"
+        "Business DM Interest Level: " + bi_level + "\n"
+        "DM Likelihood: " + bi_dm + "\n"
+        + bi_signals_text + "\n"
+        + segment_lines + "\n"
         "Write your report in exactly this structure:\n\n"
         "OVERALL DIAGNOSIS\n"
         "2-3 sentences summarising the core problem in plain language.\n\n"
@@ -49,7 +71,14 @@ def generate_ai_report(diagnostic_results):
         "3 concrete things to change in the next reel.\n\n"
         "WHAT GOOD LOOKS LIKE\n"
         "1 short paragraph describing what success looks like.\n\n"
-        "Keep under 400 words. Plain English only."
+        "SALES GROWTH PLAN\n"
+        "Based on the business interest level (" + bi_level + ") and audience composition above, "
+        "give exactly 3 precise actions to increase sales from this content — one for each of: "
+        "(1) converting the highest-intent audience segment immediately, "
+        "(2) moving warm followers to buyers, "
+        "(3) the single metric to fix first that will unblock the most revenue. "
+        "Be direct. Name the specific segment and the specific metric. No filler.\n\n"
+        "Keep under 500 words total. Plain English only."
     )
 
     try:
@@ -60,14 +89,17 @@ def generate_ai_report(diagnostic_results):
             messages=[
                 {
                     "role": "system",
-                    "content": "You are an expert Instagram content performance analyst helping non-technical small business owners improve their content."
+                    "content": (
+                        "You are an expert Instagram content performance analyst helping non-technical "
+                        "small business owners and influencers grow their sales through better content strategy."
+                    )
                 },
                 {
                     "role": "user",
                     "content": prompt
                 }
             ],
-            max_tokens=600,
+            max_tokens=750,
             temperature=0.7
         )
         return response.choices[0].message.content

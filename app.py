@@ -194,6 +194,39 @@ def row_to_inputs(row, col_map, follower_count, category, hook_type):
 
 
 # ─────────────────────────────────────────────────
+# CSV TEMPLATE GENERATOR
+# ─────────────────────────────────────────────────
+def generate_csv_template() -> bytes:
+    """
+    Returns a pre-filled CSV template as UTF-8 bytes.
+    Column names match Meta Business Suite export headers exactly,
+    so the importer auto-detects every field.
+    Three sample rows are included so creators see the expected format.
+    """
+    import io
+    data = {
+        "Title": [
+            "Your caption or reel title goes here",
+            "Second reel title example",
+            "Third reel title example",
+        ],
+        "Views": [1200, 3500, 850],
+        "Likes": [45, 120, 30],
+        "Comments": [8, 25, 5],
+        "Shares": [15, 40, 8],
+        "Saves": [22, 85, 12],
+        "Total watch time (minutes)": [480.0, 1820.0, 255.0],
+        "Duration (seconds)": [30, 45, 20],
+        "Average watch time per play (seconds)": [24.0, 31.2, 18.0],
+        "Average percentage watched": [80.0, 69.3, 90.0],
+    }
+    df = pd.DataFrame(data)
+    buf = io.StringIO()
+    df.to_csv(buf, index=False)
+    return buf.getvalue().encode("utf-8")
+
+
+# ─────────────────────────────────────────────────
 # CSS  ·  Sharp / Technical / Premium
 # ─────────────────────────────────────────────────
 def inject_css():
@@ -1250,6 +1283,10 @@ def render_csv_import():
         status_slot  = st.empty()
         success_count = skipped_count = failed_count = 0
 
+        # Aggregate trackers for business interest + audience summary
+        bi_scores_list = []
+        seg_totals = {}  # {name: {"pct_sum": 0, "count": 0, "colour": "", "icon": "", "advice": ""}}
+
         for i, (_, row) in enumerate(df.iterrows()):
             status_slot.markdown(
                 f'<p style="text-align:center;font-size:0.80rem;color:rgba(255,255,255,0.32);">'
@@ -1275,6 +1312,18 @@ def render_csv_import():
             except Exception:
                 failed_count += 1
                 continue
+
+            # Collect business interest + audience data for aggregate
+            bi = results.get("business_interest", {})
+            if bi.get("score") is not None:
+                bi_scores_list.append(bi["score"])
+            for seg in results.get("audience_segments", []):
+                n = seg["name"]
+                if n not in seg_totals:
+                    seg_totals[n] = {"pct_sum": 0, "count": 0,
+                                     "colour": seg["colour"], "icon": seg["icon"], "advice": seg["advice"]}
+                seg_totals[n]["pct_sum"] += seg["pct"]
+                seg_totals[n]["count"] += 1
 
             ok, _ = save_reel_analysis(
                 user_id=st.session_state.user_id,
@@ -1315,11 +1364,89 @@ def render_csv_import():
         )
         st.markdown(theme_engine.rio_card("Import Summary", summary_body), unsafe_allow_html=True)
 
+        # ── Aggregate Business Interest Summary ─────────────
+        if bi_scores_list:
+            avg_bi_score = sum(bi_scores_list) / len(bi_scores_list)
+            if avg_bi_score >= 7:
+                agg_bi_level = "High"; agg_bi_colour = "#00E5A0"
+                agg_bi_note = "Your content portfolio is generating strong business DM interest. Brands, agencies, and buyers are actively monitoring your reels."
+            elif avg_bi_score >= 4:
+                agg_bi_level = "Medium"; agg_bi_colour = "#FFB020"
+                agg_bi_note = "Moderate business interest across your reels. Add a clear offer or partnership CTA in your bio to convert passive signals into DMs."
+            elif avg_bi_score >= 2:
+                agg_bi_level = "Low"; agg_bi_colour = "#FF8C00"
+                agg_bi_note = "Low business interest signals in this batch. Focus on increasing save rates above 3% to attract inbound business enquiries."
+            else:
+                agg_bi_level = "None"; agg_bi_colour = "#FF3D71"
+                agg_bi_note = "Minimal business interest detected. Prioritise creating high-value, save-worthy content before expecting inbound DMs from brands or buyers."
+
+            bi_agg_body = (
+                f'<div style="display:flex;align-items:center;gap:1.1rem;margin-bottom:0.75rem;">'
+                f'<div style="font-size:2rem;font-weight:700;color:{agg_bi_colour};">{agg_bi_level}</div>'
+                f'<div style="font-size:0.72rem;color:#888;">avg score: {round(avg_bi_score, 1)}/10 across {len(bi_scores_list)} reels</div>'
+                f'</div>'
+                f'<div style="font-size:0.875rem;color:#ccc;line-height:1.75;">{agg_bi_note}</div>'
+            )
+            st.markdown("<br>", unsafe_allow_html=True)
+            st.markdown(theme_engine.rio_card("📬 Portfolio Business DM Interest", bi_agg_body), unsafe_allow_html=True)
+
+        # ── Aggregate Audience Breakdown ─────────────────────
+        if seg_totals:
+            seg_agg_html = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:0.9rem;">'
+            for seg_name, data in seg_totals.items():
+                avg_pct = round(data["pct_sum"] / data["count"]) if data["count"] else 0
+                seg_agg_html += (
+                    f'<div style="background:#111;border:1px solid #222;border-radius:8px;padding:1rem 1.1rem;">'
+                    f'<div style="font-size:1.4rem;">{data["icon"]}</div>'
+                    f'<div style="font-size:0.7rem;color:{data["colour"]};font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-top:0.35rem;">{seg_name}</div>'
+                    f'<div style="font-size:1.55rem;font-weight:700;color:{data["colour"]};">~{avg_pct}%</div>'
+                    f'<div style="font-size:0.72rem;color:#999;line-height:1.55;margin-top:0.3rem;">avg across {data["count"]} reels</div>'
+                    f'<div style="font-size:0.75rem;color:#ccc;background:rgba(255,255,255,0.04);border-radius:5px;padding:0.45rem 0.6rem;margin-top:0.55rem;line-height:1.5;">'
+                    f'<strong>Action:</strong> {data["advice"]}</div>'
+                    f'</div>'
+                )
+            seg_agg_html += '</div>'
+            st.markdown("<br>", unsafe_allow_html=True)
+            st.markdown('<div class="section-label">Portfolio Buyer Audience Breakdown</div>', unsafe_allow_html=True)
+            st.markdown(seg_agg_html, unsafe_allow_html=True)
+
 
 # ─────────────────────────────────────────────────
 # SINGLE REEL DIAGNOSTIC TAB
 # ─────────────────────────────────────────────────
 def render_single_reel():
+    # ── Input mode toggle ──────────────────────────────────────────────
+    col_toggle, col_tpl = st.columns([3, 1])
+    with col_toggle:
+        mode = st.radio(
+            "mode",
+            ["⌨️  Manual Entry", "📊  Import CSV"],
+            horizontal=True,
+            key="analyse_mode",
+            label_visibility="collapsed",
+        )
+    with col_tpl:
+        if mode == "📊  Import CSV":
+            st.download_button(
+                label="↓  Download Template",
+                data=generate_csv_template(),
+                file_name="reeliq_import_template.csv",
+                mime="text/csv",
+                use_container_width=True,
+                key="tpl_dl",
+            )
+
+    st.markdown(
+        "<div style='border-top:1px solid #1e1e1e;margin:0.75rem 0 1.5rem;'></div>",
+        unsafe_allow_html=True,
+    )
+
+    # ── CSV Import mode — early exit ───────────────────────────────────
+    if mode == "📊  Import CSV":
+        render_csv_import()
+        return
+
+    # ── Manual Entry ───────────────────────────────────────────────────
     st.markdown('<div class="section-label">01 — Reel Metrics</div>', unsafe_allow_html=True)
 
     col1, col2 = st.columns(2)
@@ -1389,10 +1516,12 @@ def render_single_reel():
             inputs=inputs, results=results, ai_report_text=report,
         )
 
-        retention  = results["retention"]
-        engagement = results["engagement"]
-        hook       = results["hook"]
-        save_rate  = results["save_rate"]
+        retention         = results["retention"]
+        engagement        = results["engagement"]
+        hook              = results["hook"]
+        save_rate         = results["save_rate"]
+        business_interest = results.get("business_interest", {})
+        audience_segments = results.get("audience_segments", [])
 
         def get_tier(label):
             if label in ("Good", "Excellent", "Strong"):          return "good"
@@ -1467,8 +1596,69 @@ def render_single_reel():
         </div>
         """, unsafe_allow_html=True)
 
+        # ── Section 05: Business DM Interest ────────────────
         st.markdown("<br>", unsafe_allow_html=True)
-        st.markdown('<div class="section-label">05 — AI Diagnostic Report</div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-label">05 — Business DM Interest</div>', unsafe_allow_html=True)
+
+        bi_level = business_interest.get("level", "Unknown")
+        bi_dm    = business_interest.get("dm_likelihood", "Unknown")
+        bi_exp   = business_interest.get("explanation", "")
+        bi_sigs  = business_interest.get("signals", [])
+
+        bi_colour_map = {
+            "High":    ("good",    "#00E5A0"),
+            "Medium":  ("average", "#FFB020"),
+            "Low":     ("poor",    "#FF8C00"),
+            "None":    ("poor",    "#FF3D71"),
+            "Unknown": ("poor",    "#888888"),
+        }
+        bi_tier, bi_hex = bi_colour_map.get(bi_level, ("poor", "#888888"))
+
+        signals_html = "".join(
+            f'<div style="font-size:0.78rem;color:#aaa;margin-top:0.45rem;">▸ {s}</div>'
+            for s in bi_sigs
+        ) if bi_sigs else ""
+
+        bi_body = (
+            f'<div style="display:flex;align-items:center;gap:1.1rem;margin-bottom:0.85rem;">'
+            f'<div style="font-size:2rem;font-weight:700;color:{bi_hex};letter-spacing:-0.03em;">{bi_level}</div>'
+            f'<div>'
+            f'<div style="font-size:0.7rem;color:#888;text-transform:uppercase;letter-spacing:0.08em;">DM Likelihood</div>'
+            f'<div style="font-size:0.95rem;font-weight:600;color:{bi_hex};">{bi_dm}</div>'
+            f'</div>'
+            f'</div>'
+            f'<div style="font-size:0.875rem;color:#ccc;line-height:1.75;">{bi_exp}</div>'
+            f'{signals_html}'
+        )
+        st.markdown(theme_engine.rio_card("📬 Business DM Interest", bi_body), unsafe_allow_html=True)
+
+        # ── Section 06: Buyer Audience Breakdown ─────────────
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown('<div class="section-label">06 — Buyer Audience Breakdown</div>', unsafe_allow_html=True)
+
+        if audience_segments:
+            seg_cards_html = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:0.9rem;margin-bottom:0.5rem;">'
+            for seg in audience_segments:
+                seg_cards_html += (
+                    f'<div style="background:#111;border:1px solid #222;border-radius:8px;padding:1rem 1.1rem;">'
+                    f'<div style="font-size:1.5rem;">{seg["icon"]}</div>'
+                    f'<div style="font-size:0.7rem;color:{seg["colour"]};font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-top:0.4rem;">{seg["name"]}</div>'
+                    f'<div style="font-size:1.6rem;font-weight:700;color:{seg["colour"]};letter-spacing:-0.03em;">{seg["pct"]}%</div>'
+                    f'<div style="font-size:0.78rem;color:#999;line-height:1.6;margin-top:0.35rem;">{seg["description"]}</div>'
+                    f'<div style="font-size:0.75rem;color:#ccc;background:rgba(255,255,255,0.04);border-radius:5px;padding:0.5rem 0.6rem;margin-top:0.6rem;line-height:1.55;">'
+                    f'<strong>Action:</strong> {seg["advice"]}</div>'
+                    f'</div>'
+                )
+            seg_cards_html += '</div>'
+            st.markdown(seg_cards_html, unsafe_allow_html=True)
+        else:
+            st.markdown(
+                '<div style="color:#666;font-size:0.85rem;padding:0.5rem 0;">Enter view, save, share, and like data to see your audience breakdown.</div>',
+                unsafe_allow_html=True,
+            )
+
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown('<div class="section-label">07 — AI Diagnostic Report</div>', unsafe_allow_html=True)
 
         report_body = (
             f'<div style="font-size:0.66rem;color:#888888;margin-bottom:0.85rem;">'
@@ -2883,9 +3073,8 @@ def render_main_app():
     </div>
     """, unsafe_allow_html=True)
 
-    single_tab, csv_tab, patterns_tab, prescore_tab, brief_tab, digest_tab, monthly_tab, bench_tab = st.tabs([
+    single_tab, patterns_tab, prescore_tab, brief_tab, digest_tab, monthly_tab, bench_tab = st.tabs([
         "⚡ Analyse",
-        "📊 Import",
         "📈 Patterns",
         "🎯 Pre-Score",
         "📝 Brief",
@@ -2896,9 +3085,6 @@ def render_main_app():
 
     with single_tab:
         render_single_reel()
-
-    with csv_tab:
-        render_csv_import()
 
     with patterns_tab:
         render_patterns()
