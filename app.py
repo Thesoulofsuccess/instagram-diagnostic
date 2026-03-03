@@ -345,110 +345,126 @@ section[data-testid="stFileUploadDropzone"] button:hover {
 }
 
 /* ══════════════════════════════════════
-   SEGMENTED CONTROL — st.segmented_control
-   (Streamlit ≥1.40 native premium widget)
+   MODE TOGGLE — DARK SEGMENTED CONTROL
+   st.radio styled via sibling-scoped CSS.
+   .riq-toggle-wrap marker sits BEFORE the
+   stRadio in the DOM (both children of
+   the same stVerticalBlock), so we use
+   :has() + general-sibling ~ to scope it.
 ══════════════════════════════════════ */
-div[data-testid="stSegmentedControl"] {
-    background: #1A1A1A !important;
+
+/* The marker div itself — visually invisible */
+.riq-toggle-wrap { display: none; }
+
+/* Scope: the stRadio that follows a stMarkdownContainer
+   containing our .riq-toggle-wrap marker.
+   Two forms: direct sibling (most Streamlit versions) + one-level
+   wrapped sibling (Streamlit 1.54 stVerticalBlockWithBorder wrapper) */
+[data-testid="stMarkdownContainer"]:has(.riq-toggle-wrap)
+    ~ [data-testid="stRadio"] div[role="radiogroup"],
+[data-testid="stMarkdownContainer"]:has(.riq-toggle-wrap)
+    ~ div [data-testid="stRadio"] div[role="radiogroup"] {
+    display: inline-flex !important;
+    flex-direction: row !important;
+    background: #141414 !important;
     border: 1px solid rgba(255,255,255,0.10) !important;
     border-radius: 10px !important;
     padding: 4px !important;
     gap: 3px !important;
 }
-div[data-testid="stSegmentedControl"] button {
-    background: transparent !important;
-    border: none !important;
-    color: rgba(255,255,255,0.65) !important;
-    font-size: 0.76rem !important;
-    font-weight: 700 !important;
-    letter-spacing: 0.09em !important;
-    text-transform: uppercase !important;
-    border-radius: 7px !important;
-    padding: 9px 24px !important;
-    transition: all 0.18s ease !important;
-    white-space: nowrap !important;
-    height: auto !important;
-    min-height: 0 !important;
-    line-height: 1.2 !important;
-}
-div[data-testid="stSegmentedControl"] button[aria-checked="true"] {
-    background: linear-gradient(90deg, #833AB4 0%, #E1306C 50%, #FCB045 100%) !important;
-    color: #FFFFFF !important;
-    box-shadow: 0 0 18px rgba(225,48,108,0.30), 0 2px 8px rgba(0,0,0,0.40) !important;
-}
-div[data-testid="stSegmentedControl"] button[aria-checked="false"]:hover {
-    background: rgba(255,255,255,0.06) !important;
-    color: rgba(255,255,255,0.90) !important;
+
+/* ── Convenience shorthand: covers both
+      (a) direct sibling: ~ [stRadio]
+      (b) one-level wrapped: ~ div [stRadio]   (Streamlit 1.54 stVerticalBlockWithBorder)
+   Each rule duplicated for both forms.    ── */
+
+/* Hide "Input mode" label */
+[data-testid="stMarkdownContainer"]:has(.riq-toggle-wrap) ~ [data-testid="stRadio"] > label:first-child,
+[data-testid="stMarkdownContainer"]:has(.riq-toggle-wrap) ~ div [data-testid="stRadio"] > label:first-child {
+    display: none !important;
 }
 
-/* ══════════════════════════════════════
-   SEGMENTED CONTROL — st.radio fallback
-   (Streamlit <1.40 — keep both so either works)
-══════════════════════════════════════ */
-div[data-testid="stRadio"] div[role="radiogroup"] {
-    background: #1A1A1A;
-    border: 1px solid rgba(255,255,255,0.10);
-    border-radius: 10px;
-    padding: 4px;
-    display: flex;
-    flex-direction: row;
-    gap: 3px;
-    width: fit-content;
+/* Each pill */
+[data-testid="stMarkdownContainer"]:has(.riq-toggle-wrap) ~ [data-testid="stRadio"] div[role="radiogroup"] label,
+[data-testid="stMarkdownContainer"]:has(.riq-toggle-wrap) ~ div [data-testid="stRadio"] div[role="radiogroup"] label {
+    border-radius: 7px !important;
+    padding: 8px 22px !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    transition: background 0.18s ease !important;
+    background: transparent !important;
+    margin: 0 !important;
 }
-div[data-testid="stRadio"] div[role="radiogroup"] label {
-    border-radius: 7px;
-    padding: 9px 24px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    transition: background 0.18s ease, box-shadow 0.18s ease;
-}
-div[data-testid="stRadio"] [data-baseweb="radio"] > div:first-child {
+
+/* Hide native radio circle */
+[data-testid="stMarkdownContainer"]:has(.riq-toggle-wrap) ~ [data-testid="stRadio"] [data-baseweb="radio"] > div:first-child,
+[data-testid="stMarkdownContainer"]:has(.riq-toggle-wrap) ~ div [data-testid="stRadio"] [data-baseweb="radio"] > div:first-child {
     display: none !important;
     width: 0 !important;
     margin: 0 !important;
 }
-div[data-testid="stRadio"] div[role="radiogroup"] p {
-    color: rgba(255,255,255,0.75) !important;
-    font-size: 0.76rem !important;
+
+/* Inactive text — grey */
+[data-testid="stMarkdownContainer"]:has(.riq-toggle-wrap) ~ [data-testid="stRadio"] div[role="radiogroup"] p,
+[data-testid="stMarkdownContainer"]:has(.riq-toggle-wrap) ~ div [data-testid="stRadio"] div[role="radiogroup"] p {
+    color: #888888 !important;
+    font-size: 0.74rem !important;
     font-weight: 700 !important;
-    letter-spacing: 0.09em !important;
+    letter-spacing: 0.08em !important;
     text-transform: uppercase !important;
     margin: 0 !important;
-    cursor: pointer !important;
+    line-height: 1 !important;
 }
-div[data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked) {
-    background: linear-gradient(90deg, #833AB4 0%, #E1306C 50%, #FCB045 100%);
-    box-shadow: 0 0 18px rgba(225,48,108,0.30), 0 2px 8px rgba(0,0,0,0.40);
+
+/* Active pill — IG gradient */
+[data-testid="stMarkdownContainer"]:has(.riq-toggle-wrap) ~ [data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked),
+[data-testid="stMarkdownContainer"]:has(.riq-toggle-wrap) ~ div [data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked) {
+    background: linear-gradient(90deg, #833AB4 0%, #E1306C 50%, #FCB045 100%) !important;
+    box-shadow: 0 0 14px rgba(225,48,108,0.26), 0 2px 6px rgba(0,0,0,0.35) !important;
 }
-div[data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked) p {
+
+/* Active text — white */
+[data-testid="stMarkdownContainer"]:has(.riq-toggle-wrap) ~ [data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked) p,
+[data-testid="stMarkdownContainer"]:has(.riq-toggle-wrap) ~ div [data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked) p {
     color: #FFFFFF !important;
 }
 
+/* Hover on inactive */
+[data-testid="stMarkdownContainer"]:has(.riq-toggle-wrap) ~ [data-testid="stRadio"] div[role="radiogroup"] label:not(:has(input:checked)):hover,
+[data-testid="stMarkdownContainer"]:has(.riq-toggle-wrap) ~ div [data-testid="stRadio"] div[role="radiogroup"] label:not(:has(input:checked)):hover {
+    background: rgba(255,255,255,0.07) !important;
+}
+[data-testid="stMarkdownContainer"]:has(.riq-toggle-wrap) ~ [data-testid="stRadio"] div[role="radiogroup"] label:not(:has(input:checked)):hover p,
+[data-testid="stMarkdownContainer"]:has(.riq-toggle-wrap) ~ div [data-testid="stRadio"] div[role="radiogroup"] label:not(:has(input:checked)):hover p {
+    color: rgba(255,255,255,0.85) !important;
+}
+
 /* ══════════════════════════════════════
-   DOWNLOAD BUTTON — GHOST STYLE
-   (broad selectors to survive Streamlit class changes)
+   DOWNLOAD TEMPLATE BUTTON — GHOST SMALL
+   Compact centered ghost, not full-width
 ══════════════════════════════════════ */
 [data-testid="stDownloadButton"] button,
 div[data-testid="stDownloadButton"] button,
 .stDownloadButton button {
     background: transparent !important;
-    border: 1px solid rgba(255,255,255,0.28) !important;
-    color: rgba(255,255,255,0.78) !important;
+    border: 1px solid rgba(255,255,255,0.22) !important;
+    color: rgba(255,255,255,0.65) !important;
     border-radius: 8px !important;
-    font-size: 0.72rem !important;
+    font-size: 0.70rem !important;
     font-weight: 600 !important;
-    letter-spacing: 0.08em !important;
-    text-transform: uppercase !important;
-    padding: 0.5rem 1.1rem !important;
+    letter-spacing: 0.06em !important;
+    padding: 0.42rem 1.2rem !important;
     transition: all 0.18s ease !important;
-    width: 100% !important;
+    width: auto !important;
+    min-width: 0 !important;
+    white-space: nowrap !important;
 }
 [data-testid="stDownloadButton"] button:hover,
 div[data-testid="stDownloadButton"] button:hover {
-    background: rgba(255,255,255,0.08) !important;
-    border-color: rgba(255,255,255,0.55) !important;
-    color: #FFFFFF !important;
+    background: rgba(255,255,255,0.06) !important;
+    border-color: rgba(255,255,255,0.45) !important;
+    color: rgba(255,255,255,0.90) !important;
 }
 
 /* ══════════════════════════════════════
@@ -1397,29 +1413,30 @@ def render_csv_import():
     )
     st.markdown(theme_engine.rio_card("How It Works", how_html), unsafe_allow_html=True)
 
-    # ── Upload zone header — label left, template button right ─────────
-    up_col, tpl_col = st.columns([3, 1])
-    with up_col:
-        st.markdown(
-            '<div class="section-label" style="margin-bottom:0.6rem;">Upload Your CSV</div>',
-            unsafe_allow_html=True,
-        )
-    with tpl_col:
-        st.download_button(
-            label="📥  Download Template",
-            data=generate_csv_template(),
-            file_name="reeliq_import_template.csv",
-            mime="text/csv",
-            use_container_width=True,
-            key="tpl_dl_csv",
-        )
-
+    # ── Upload zone ────────────────────────────────────────────────────
+    st.markdown(
+        '<div class="section-label" style="margin-bottom:0.6rem;">Upload Your CSV</div>',
+        unsafe_allow_html=True,
+    )
     uploaded = st.file_uploader(
         "Drop your CSV here or click to browse",
         type=["csv"],
         help="Export from Meta Business Suite → Insights → Content → Reels → Export",
         label_visibility="collapsed",
     )
+
+    # Template download — centered ghost button below the drop zone
+    st.markdown("<div style='margin-top:0.4rem;'></div>", unsafe_allow_html=True)
+    _, _tpl_center, _ = st.columns([2, 1, 2])
+    with _tpl_center:
+        st.download_button(
+            label="↓  Download Template",
+            data=generate_csv_template(),
+            file_name="reeliq_import_template.csv",
+            mime="text/csv",
+            use_container_width=True,
+            key="tpl_dl_csv",
+        )
 
     if uploaded is None:
         st.markdown("""
@@ -1636,25 +1653,18 @@ def render_csv_import():
 # ─────────────────────────────────────────────────
 def render_single_reel():
     # ── Input mode toggle ──────────────────────────────────────────────
-    # Use st.segmented_control (Streamlit ≥1.40) for premium native styling;
-    # fall back to st.radio on older deployments.
-    try:
-        _sc = st.segmented_control(
-            "mode",
-            options=["⌨️  Manual Entry", "📊  Import CSV"],
-            default="⌨️  Manual Entry",
-            label_visibility="collapsed",
-            key="analyse_sc",
-        )
-        mode = _sc if _sc is not None else "⌨️  Manual Entry"
-    except AttributeError:
-        mode = st.radio(
-            "mode",
-            ["⌨️  Manual Entry", "📊  Import CSV"],
-            horizontal=True,
-            key="analyse_mode",
-            label_visibility="collapsed",
-        )
+    # Rendered as a styled st.radio inside a scoped CSS wrapper div.
+    # The .riq-toggle-wrap CSS turns it into a dark segmented control.
+    st.markdown('<div class="riq-toggle-wrap">', unsafe_allow_html=True)
+    mode = st.radio(
+        "Input mode",
+        options=["⌨️  Manual Entry", "📊  Import CSV"],
+        index=0,
+        horizontal=True,
+        key="analyse_mode",
+        label_visibility="collapsed",
+    )
+    st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown(
         "<div style='border-top:1px solid #1e1e1e;margin:0.75rem 0 1.5rem;'></div>",
