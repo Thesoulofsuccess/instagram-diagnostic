@@ -300,15 +300,143 @@ def inject_css():
 .import-note p:last-child { margin-bottom: 0; }
 
 /* ══════════════════════════════════════
-   FILE UPLOADER
+   FILE UPLOADER — PREMIUM DROP ZONE
 ══════════════════════════════════════ */
-[data-testid="stFileUploader"] {
-    background: rgba(255,255,255,0.018) !important;
-    border: 1px dashed rgba(131,58,180,0.22) !important;
-    border-radius: 0px !important;
-    transition: border-color 0.2s !important;
+section[data-testid="stFileUploadDropzone"] {
+    background: rgba(131,58,180,0.05) !important;
+    border: 1.5px dashed rgba(131,58,180,0.50) !important;
+    border-radius: 10px !important;
+    padding: 1.4rem !important;
+    transition: all 0.2s ease !important;
 }
-[data-testid="stFileUploader"]:hover { border-color: rgba(131,58,180,0.42) !important; }
+section[data-testid="stFileUploadDropzone"]:hover {
+    background: rgba(131,58,180,0.09) !important;
+    border-color: rgba(131,58,180,0.85) !important;
+}
+div[data-testid="stFileUploader"] label {
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+    font-size: 0.80rem !important;
+    letter-spacing: 0.07em !important;
+    text-transform: uppercase !important;
+}
+[data-testid="stFileUploaderDropzoneInstructions"] span,
+[data-testid="stFileUploaderDropzoneInstructions"] p {
+    color: rgba(255,255,255,0.55) !important;
+    font-weight: 600 !important;
+}
+
+/* ══════════════════════════════════════
+   SEGMENTED CONTROL (Mode Toggle)
+══════════════════════════════════════ */
+div[data-testid="stRadio"] div[role="radiogroup"] {
+    background: #111111;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 4px;
+    display: flex;
+    flex-direction: row;
+    gap: 3px;
+    width: fit-content;
+}
+div[data-testid="stRadio"] div[role="radiogroup"] > div {
+    border-radius: 7px;
+    padding: 8px 22px;
+    transition: background 0.18s ease, box-shadow 0.18s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+/* Hide native radio circle */
+div[data-testid="stRadio"] [data-baseweb="radio"] > div:first-child {
+    display: none !important;
+    width: 0 !important;
+    margin: 0 !important;
+}
+/* Inactive label text */
+div[data-testid="stRadio"] div[role="radiogroup"] > div p,
+div[data-testid="stRadio"] div[role="radiogroup"] > div label {
+    color: rgba(255,255,255,0.38) !important;
+    font-size: 0.76rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.10em !important;
+    text-transform: uppercase !important;
+    line-height: 1 !important;
+    margin: 0 !important;
+    cursor: pointer !important;
+}
+/* Active pill — IG gradient + glow */
+div[data-testid="stRadio"] div[role="radiogroup"] > div:has(input:checked) {
+    background: linear-gradient(90deg, #833AB4 0%, #E1306C 50%, #FCB045 100%);
+    box-shadow: 0 0 18px rgba(225,48,108,0.35), 0 2px 10px rgba(0,0,0,0.45);
+}
+div[data-testid="stRadio"] div[role="radiogroup"] > div:has(input:checked) p,
+div[data-testid="stRadio"] div[role="radiogroup"] > div:has(input:checked) label {
+    color: #FFFFFF !important;
+}
+
+/* ══════════════════════════════════════
+   DOWNLOAD BUTTON — GHOST STYLE
+══════════════════════════════════════ */
+div[data-testid="stDownloadButton"] > button {
+    background: transparent !important;
+    border: 1px solid rgba(255,255,255,0.22) !important;
+    color: rgba(255,255,255,0.70) !important;
+    border-radius: 8px !important;
+    font-size: 0.72rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+    padding: 0.45rem 1rem !important;
+    transition: all 0.18s ease !important;
+    width: 100% !important;
+}
+div[data-testid="stDownloadButton"] > button:hover {
+    background: rgba(255,255,255,0.07) !important;
+    border-color: rgba(255,255,255,0.48) !important;
+    color: #FFFFFF !important;
+}
+
+/* ══════════════════════════════════════
+   INPUT FIELD WEIGHT
+══════════════════════════════════════ */
+div[data-testid="stNumberInput"] > div {
+    border-radius: 12px !important;
+    border: 1px solid rgba(255,255,255,0.10) !important;
+    overflow: hidden !important;
+}
+div[data-testid="stNumberInput"] input {
+    border-radius: 12px !important;
+    padding: 0.7rem 1rem !important;
+}
+div[data-testid="stSelectbox"] > div > div[data-baseweb="select"] > div {
+    border-radius: 12px !important;
+    border: 1px solid rgba(255,255,255,0.10) !important;
+}
+div[data-testid="stTextInput"] > div > div {
+    border-radius: 12px !important;
+    border: 1px solid rgba(255,255,255,0.10) !important;
+}
+div[data-testid="stTextArea"] > div > div {
+    border-radius: 12px !important;
+    border: 1px solid rgba(255,255,255,0.10) !important;
+}
+
+/* ══════════════════════════════════════
+   TAB OVERFLOW — hide white patch
+══════════════════════════════════════ */
+.stTabs [data-baseweb="tab-list"] button:not([role="tab"]) {
+    display: none !important;
+    width: 0 !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    border: none !important;
+    background: transparent !important;
+}
+.stTabs [data-baseweb="tab-list"] > [role="presentation"] {
+    display: none !important;
+}
 
 /* ══════════════════════════════════════
    DATAFRAME
@@ -1195,10 +1323,28 @@ def render_csv_import():
     )
     st.markdown(theme_engine.rio_card("How It Works", how_html), unsafe_allow_html=True)
 
+    # ── Upload zone header — label left, template button right ─────────
+    up_col, tpl_col = st.columns([3, 1])
+    with up_col:
+        st.markdown(
+            '<div class="section-label" style="margin-bottom:0.6rem;">Upload Your CSV</div>',
+            unsafe_allow_html=True,
+        )
+    with tpl_col:
+        st.download_button(
+            label="📥  Download Template",
+            data=generate_csv_template(),
+            file_name="reeliq_import_template.csv",
+            mime="text/csv",
+            use_container_width=True,
+            key="tpl_dl_csv",
+        )
+
     uploaded = st.file_uploader(
         "Drop your CSV here or click to browse",
         type=["csv"],
         help="Export from Meta Business Suite → Insights → Content → Reels → Export",
+        label_visibility="collapsed",
     )
 
     if uploaded is None:
@@ -1416,26 +1562,13 @@ def render_csv_import():
 # ─────────────────────────────────────────────────
 def render_single_reel():
     # ── Input mode toggle ──────────────────────────────────────────────
-    col_toggle, col_tpl = st.columns([3, 1])
-    with col_toggle:
-        mode = st.radio(
-            "mode",
-            ["⌨️  Manual Entry", "📊  Import CSV"],
-            horizontal=True,
-            key="analyse_mode",
-            label_visibility="collapsed",
-        )
-    with col_tpl:
-        if mode == "📊  Import CSV":
-            st.download_button(
-                label="↓  Download Template",
-                data=generate_csv_template(),
-                file_name="reeliq_import_template.csv",
-                mime="text/csv",
-                use_container_width=True,
-                key="tpl_dl",
-            )
-
+    mode = st.radio(
+        "mode",
+        ["⌨️  Manual Entry", "📊  Import CSV"],
+        horizontal=True,
+        key="analyse_mode",
+        label_visibility="collapsed",
+    )
     st.markdown(
         "<div style='border-top:1px solid #1e1e1e;margin:0.75rem 0 1.5rem;'></div>",
         unsafe_allow_html=True,
