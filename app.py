@@ -405,16 +405,17 @@ section[data-testid="stFileUploadDropzone"] button:hover {
     margin: 0 !important;
 }
 
-/* Inactive text — grey */
+/* Inactive text — clearly dimmed so selected state stands out */
 [data-testid="stMarkdownContainer"]:has(.riq-toggle-wrap) ~ [data-testid="stRadio"] div[role="radiogroup"] p,
 [data-testid="stMarkdownContainer"]:has(.riq-toggle-wrap) ~ div [data-testid="stRadio"] div[role="radiogroup"] p {
-    color: #888888 !important;
+    color: rgba(255,255,255,0.35) !important;
     font-size: 0.74rem !important;
-    font-weight: 700 !important;
+    font-weight: 600 !important;
     letter-spacing: 0.08em !important;
     text-transform: uppercase !important;
     margin: 0 !important;
     line-height: 1 !important;
+    transition: color 0.18s ease !important;
 }
 
 /* Active pill — IG gradient */
@@ -424,10 +425,12 @@ section[data-testid="stFileUploadDropzone"] button:hover {
     box-shadow: 0 0 14px rgba(225,48,108,0.26), 0 2px 6px rgba(0,0,0,0.35) !important;
 }
 
-/* Active text — white */
+/* Active text — crisp bright white, heavier weight */
 [data-testid="stMarkdownContainer"]:has(.riq-toggle-wrap) ~ [data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked) p,
 [data-testid="stMarkdownContainer"]:has(.riq-toggle-wrap) ~ div [data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked) p {
     color: #FFFFFF !important;
+    font-weight: 800 !important;
+    text-shadow: 0 0 8px rgba(255,255,255,0.25) !important;
 }
 
 /* Hover on inactive */
@@ -1658,7 +1661,7 @@ def render_single_reel():
     st.markdown('<div class="riq-toggle-wrap">', unsafe_allow_html=True)
     mode = st.radio(
         "Input mode",
-        options=["⌨️  Manual Entry", "📊  Import CSV"],
+        options=["Manual Entry", "Import CSV"],
         index=0,
         horizontal=True,
         key="analyse_mode",
@@ -1672,7 +1675,7 @@ def render_single_reel():
     )
 
     # ── CSV Import mode — early exit ───────────────────────────────────
-    if mode == "📊  Import CSV":
+    if mode == "Import CSV":
         render_csv_import()
         return
 
