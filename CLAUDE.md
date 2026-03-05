@@ -140,3 +140,7 @@ Generate a blank structured template for capstone submission covering:
 | Date | Change |
 |------|--------|
 | 2026-03-05 | Initial CLAUDE.md created |
+| 2026-03-05 | BUG-01 fixed — negative input clamp added to `calculate_engagement_rate()` and `score_engagement()` in `diagnostic_engine.py` |
+| 2026-03-05 | BUG-03 fixed — `timeout=30` added to all 3 OpenAI call sites in `ai_report.py` |
+| 2026-03-05 | UX-01 fixed — follower_count=0 info warning added to manual entry diagnostic flow in `app.py` |
+| 2026-03-05 | QA sign-off completed — 15 test cases, 20/20 validation checklist, `docs/QA_SIGN_OFF.md` committed |
