@@ -100,7 +100,8 @@ def generate_ai_report(diagnostic_results):
                 }
             ],
             max_tokens=750,
-            temperature=0.7
+            temperature=0.7,
+            timeout=30,
         )
         return response.choices[0].message.content
     except Exception as e:
@@ -165,6 +166,7 @@ def generate_pre_score_tips(pre_score_result: dict) -> str:
             ],
             max_tokens=400,
             temperature=0.7,
+            timeout=30,
         )
         return response.choices[0].message.content
     except Exception as e:
@@ -267,6 +269,7 @@ IMPORTANT: This brief MUST use {best_hook} as the hook type and reference the cr
             ],
             max_tokens=600,
             temperature=0.75,
+            timeout=30,
         )
         return response.choices[0].message.content
     except Exception as e:

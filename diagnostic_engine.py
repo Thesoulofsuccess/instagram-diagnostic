@@ -61,12 +61,24 @@ def score_retention(retention_ratio, category):
 def calculate_engagement_rate(views, likes, comments, shares, saves):
     if views == 0:
         return 0
+    # Clamp all interaction counts — negative values are invalid inputs
+    likes    = max(0, likes)
+    comments = max(0, comments)
+    shares   = max(0, shares)
+    saves    = max(0, saves)
     total_interactions = likes + comments + shares + saves
     return round(total_interactions / views, 4)
 
 
 def score_engagement(engagement_rate, follower_count,
                      views=0, likes=0, comments=0, shares=0, saves=0):
+    # Clamp raw counts so per-100 breakdown can never go negative
+    likes    = max(0, likes)
+    comments = max(0, comments)
+    shares   = max(0, shares)
+    saves    = max(0, saves)
+    engagement_rate = max(0.0, engagement_rate)
+
     if follower_count < 1000:
         tier = "under_1k"
     elif follower_count < 5000:
