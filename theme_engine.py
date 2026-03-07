@@ -487,24 +487,10 @@ div.ghost-btn > div > button:hover, div.ghost-btn button:hover {
 /* ──────────────────────────────────────────────────────
    HERO SECTION
 ────────────────────────────────────────────────────── */
-.hero { text-align: center; padding: 0.8rem 1rem 1rem; position: relative; }
-.hero::before {
-    content: ''; position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
-    width: 560px; height: 280px;
-    background: radial-gradient(ellipse,
-        rgba(131,58,180,0.05) 0%, rgba(225,48,108,0.03) 40%, transparent 70%);
-    pointer-events: none;
-}
-.badge {
-    display: inline-flex; align-items: center; gap: 0.45rem;
-    background: rgba(131,58,180,0.07); border: 1px solid rgba(131,58,180,0.20);
-    color: rgba(170,100,220,0.90); font-size: 0.58rem; font-weight: 700;
-    letter-spacing: 0.22em; text-transform: uppercase;
-    padding: 0.3rem 1.15rem; border-radius: 0; margin-bottom: 0.9rem;
-}
+.hero { padding: 0.6rem 0 1rem; }
 .hero-sub {
-    font-size: 1.1rem; font-weight: 400; color: #888888;
-    line-height: 1.65; max-width: 700px; margin: 0 auto;
+    font-size: 1.0rem; font-weight: 400; color: #888888;
+    line-height: 1.65; max-width: 700px; margin: 0 0 0.5rem;
 }
 @media (max-width: 640px) { .hero-title { font-size: 2.3rem; } }
 
@@ -656,18 +642,17 @@ div.ghost-btn > div > button:hover, div.ghost-btn button:hover {
 ────────────────────────────────────────────────────── */
 
 /* ── Outer wrapper = the one visible box ── */
-[data-testid="stFileUploader"],
-div:has(> section:has(input[type="file"])) {
+[data-testid="stFileUploader"] {
     background: #111111 !important;
     background-color: #111111 !important;
     border: 1.5px dashed rgba(131,58,180,0.32) !important;
     border-radius: 10px !important;
-    padding: 1.8rem 1.5rem !important;
+    padding: 2.8rem 1.5rem 2rem !important;
+    min-height: 150px !important;
     box-shadow: none !important;
     transition: border-color 0.2s ease !important;
 }
-[data-testid="stFileUploader"]:hover,
-div:has(> section:has(input[type="file"])):hover {
+[data-testid="stFileUploader"]:hover {
     background: #161616 !important;
     background-color: #161616 !important;
     border-color: rgba(225,48,108,0.50) !important;
@@ -680,16 +665,27 @@ div:has(> section:has(input[type="file"])):hover {
 #root [data-testid="stFileUploader"] > div > div,
 #root [data-testid="stFileUploader"] > div > section,
 #root [data-testid="stFileUploader"] div,
-#root [data-testid="stFileUploader"] section,
 [data-testid="stFileUploaderDropzone"],
 [data-testid="stFileUploadDropzone"],
-section:has(input[type="file"]),
 div:has(> input[type="file"]) {
     background: transparent !important;
     background-color: transparent !important;
     border: none !important;
     box-shadow: none !important;
     padding: 0 !important;
+}
+/* Dropzone section — reset any Streamlit negative-margin that
+   could float the icon above the outer box top edge */
+#root [data-testid="stFileUploader"] section,
+section:has(input[type="file"]) {
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin-top: 0 !important;
+    position: relative !important;
+    top: 0 !important;
 }
 /* Upload icon */
 [data-testid="stFileUploaderDropzone"] svg,
@@ -738,24 +734,14 @@ div:has(> input[type="file"]) {
 /* ──────────────────────────────────────────────────────
    TABS — kill the white scroll-overflow arrow
 ────────────────────────────────────────────────────── */
+/* Hide ALL scroll/overflow arrow buttons that appear beside the tab list */
 .stTabs [data-baseweb="tab-list"] button,
-.stTabs [data-baseweb="tab-list"] > button {
-    background: #111111 !important;
-    background-color: #111111 !important;
-    border: none !important;
-    color: rgba(255,255,255,0.40) !important;
-    box-shadow: none !important;
-}
-/* BaseUI overflow scroll arrows that appear beside tab list */
+.stTabs [data-baseweb="tab-list"] > button,
 [data-baseweb="tab-list"] ~ button,
 [data-baseweb="tab-list"] + button,
 button[data-testid="stTabsScrollButton"],
 div[data-testid="stTabs"] > div > button {
-    background: #111111 !important;
-    background-color: #111111 !important;
-    border: none !important;
-    color: rgba(255,255,255,0.35) !important;
-    box-shadow: none !important;
+    display: none !important;
 }
 /* The stTabs outer wrapper — kill any white bleed */
 div[data-testid="stTabs"],

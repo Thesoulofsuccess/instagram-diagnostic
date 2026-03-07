@@ -3436,8 +3436,8 @@ def render_main_app():
 
     st.markdown("""
     <div class="hero">
-        <div class="badge">⚡ AI Content Intelligence</div>
-        <p class="hero-sub">Understand exactly why your Instagram Reels performed the way they did.<br>
+        <div class="section-label">⚡ AI Content Intelligence</div>
+        <p class="hero-sub">Understand exactly why your Instagram Reels performed the way they did.
         Specific, plain-language diagnostics built for solo creators.</p>
     </div>
     """, unsafe_allow_html=True)
