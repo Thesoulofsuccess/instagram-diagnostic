@@ -647,82 +647,47 @@ div.ghost-btn > div > button:hover, div.ghost-btn button:hover {
 .stProgress > div { background: rgba(255,255,255,0.05) !important; border-radius: 0 !important; }
 
 /* ──────────────────────────────────────────────────────
-   FILE UPLOADER — dark override (triple-layer)
-   Layer 1: direct testid selectors (Streamlit 1.28–1.54+)
-   Layer 2: #root-prefixed for max specificity — beats
-            styled-component double-class rules (.a .b)
-   Layer 3: section/div:has(input[type=file]) — version-
-            agnostic, targets by content not testid
+   FILE UPLOADER — one clean dark box
+   Border lives on the OUTER wrapper only so the dropzone
+   AND browse button sit together inside a single box.
+   Inner elements: dark bg, no border.
 ────────────────────────────────────────────────────── */
 
-/* ── Layer 1: direct testid (both old + new spelling) ── */
-[data-testid="stFileUploaderDropzone"],
-[data-testid="stFileUploadDropzone"] {
+/* ── Outer wrapper = the one visible box ── */
+[data-testid="stFileUploader"],
+div:has(> section:has(input[type="file"])) {
     background: #111111 !important;
     background-color: #111111 !important;
     border: 1.5px dashed rgba(131,58,180,0.32) !important;
     border-radius: 10px !important;
-    padding: 2.2rem 1.5rem !important;
-    text-align: center !important;
+    padding: 1.8rem 1.5rem !important;
     box-shadow: none !important;
     transition: border-color 0.2s ease !important;
 }
-[data-testid="stFileUploaderDropzone"]:hover,
-[data-testid="stFileUploadDropzone"]:hover {
+[data-testid="stFileUploader"]:hover,
+div:has(> section:has(input[type="file"])):hover {
     background: #161616 !important;
     background-color: #161616 !important;
     border-color: rgba(225,48,108,0.50) !important;
 }
 
-/* ── Layer 2: #root prefix — specificity (1,1,X) beats
-   any styled-component double-class (0,2,0) rule ── */
-#root [data-testid="stFileUploader"],
+/* ── All inner structural elements: dark bg, NO border ──
+   Prevents any inner div/section getting its own box.
+   #root prefix beats any styled-component double-class rule. ── */
 #root [data-testid="stFileUploader"] > div,
 #root [data-testid="stFileUploader"] > div > div,
 #root [data-testid="stFileUploader"] > div > section,
 #root [data-testid="stFileUploader"] div,
-#root [data-testid="stFileUploader"] section {
-    background: #111111 !important;
-    background-color: #111111 !important;
-    box-shadow: none !important;
-}
-
-/* ── Layer 3: :has(input[type=file]) — works on EVERY
-   Streamlit version regardless of testid/DOM structure ── */
-section:has(input[type="file"]) {
-    background: #111111 !important;
-    background-color: #111111 !important;
-    border: 1.5px dashed rgba(131,58,180,0.32) !important;
-    border-radius: 10px !important;
-    padding: 2.2rem 1.5rem !important;
-    text-align: center !important;
-    box-shadow: none !important;
-}
-section:has(input[type="file"]):hover,
-div:has(> input[type="file"]):hover {
-    background: #161616 !important;
-    background-color: #161616 !important;
-    border-color: rgba(225,48,108,0.50) !important;
-}
-/* div variant: older Streamlit where dropzone is a div not section */
+#root [data-testid="stFileUploader"] section,
+[data-testid="stFileUploaderDropzone"],
+[data-testid="stFileUploadDropzone"],
+section:has(input[type="file"]),
 div:has(> input[type="file"]) {
-    background: #111111 !important;
-    background-color: #111111 !important;
-    border: 1.5px dashed rgba(131,58,180,0.32) !important;
-    border-radius: 10px !important;
-    padding: 2.2rem 1.5rem !important;
-    text-align: center !important;
-    box-shadow: none !important;
-}
-
-/* Inner divs inside the dropzone: no double-border */
-[data-testid="stFileUploaderDropzone"] div,
-[data-testid="stFileUploadDropzone"] div,
-[data-testid="stFileUploader"] section div,
-[data-testid="stFileUploader"] section > div,
-section:has(input[type="file"]) div,
-div:has(> input[type="file"]) div {
+    background: transparent !important;
+    background-color: transparent !important;
     border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
 }
 /* Upload icon */
 [data-testid="stFileUploaderDropzone"] svg,
