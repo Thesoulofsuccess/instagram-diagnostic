@@ -698,10 +698,21 @@ section:has(input[type="file"]) {
     text-align: center !important;
     box-shadow: none !important;
 }
-section:has(input[type="file"]):hover {
+section:has(input[type="file"]):hover,
+div:has(> input[type="file"]):hover {
     background: #161616 !important;
     background-color: #161616 !important;
     border-color: rgba(225,48,108,0.50) !important;
+}
+/* div variant: older Streamlit where dropzone is a div not section */
+div:has(> input[type="file"]) {
+    background: #111111 !important;
+    background-color: #111111 !important;
+    border: 1.5px dashed rgba(131,58,180,0.32) !important;
+    border-radius: 10px !important;
+    padding: 2.2rem 1.5rem !important;
+    text-align: center !important;
+    box-shadow: none !important;
 }
 
 /* Inner divs inside the dropzone: no double-border */
@@ -709,7 +720,8 @@ section:has(input[type="file"]):hover {
 [data-testid="stFileUploadDropzone"] div,
 [data-testid="stFileUploader"] section div,
 [data-testid="stFileUploader"] section > div,
-section:has(input[type="file"]) div {
+section:has(input[type="file"]) div,
+div:has(> input[type="file"]) div {
     border: none !important;
 }
 /* Upload icon */
