@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import os
 import pandas as pd
 
@@ -1468,6 +1469,45 @@ def render_csv_import():
         '<div class="section-label" style="margin-bottom:0.6rem;">Upload Your CSV</div>',
         unsafe_allow_html=True,
     )
+
+    # Nuclear JS: force dark background on file uploader regardless of
+    # Streamlit version. Targets both old (stFileUploadDropzone) and new
+    # (stFileUploaderDropzone) testid spellings via inline !important styles
+    # which override all CSS specificity and styled-component conflicts.
+    components.html(
+        """<script>
+        (function () {
+            function forceDark() {
+                try {
+                    var d = parent.document;
+                    var sels = [
+                        '[data-testid="stFileUploaderDropzone"]',
+                        '[data-testid="stFileUploadDropzone"]',
+                        '[data-testid="stFileUploader"] section',
+                        '[data-testid="stFileUploader"] > div',
+                        '[data-testid="stFileUploader"] > div > div',
+                    ];
+                    sels.forEach(function (s) {
+                        d.querySelectorAll(s).forEach(function (el) {
+                            el.style.setProperty('background-color', '#111111', 'important');
+                            el.style.setProperty('background', '#111111', 'important');
+                        });
+                    });
+                } catch (e) {}
+            }
+            [0, 150, 400, 900, 2000].forEach(function (ms) {
+                setTimeout(forceDark, ms);
+            });
+            try {
+                new MutationObserver(forceDark).observe(
+                    parent.document.body, { childList: true, subtree: true }
+                );
+            } catch (e) {}
+        })();
+        </script>""",
+        height=0,
+    )
+
     uploaded = st.file_uploader(
         "Drop your CSV here or click to browse",
         type=["csv"],

@@ -648,14 +648,36 @@ div.ghost-btn > div > button:hover, div.ghost-btn button:hover {
 
 /* ──────────────────────────────────────────────────────
    FILE UPLOADER — dark override
-   Strategy: force #111111 directly on all divs/sections.
-   Do NOT wipe to transparent first — that exposes white
-   parent backgrounds when testid selectors miss.
-   The dropzone is a <section> element (confirmed in Streamlit
-   1.54.0 JS: const re=p("section",...)).
+   Multi-version CSS: covers Streamlit 1.28–1.54+ via
+   direct testid targets + nested div/section variants.
+   JS injection in render_csv_import() is the nuclear fallback.
 ────────────────────────────────────────────────────── */
 
-/* All nested divs and sections: dark background, no rogue borders */
+/* Direct dropzone targets: both old (stFileUploadDropzone)
+   and new (stFileUploaderDropzone) testid spellings */
+[data-testid="stFileUploaderDropzone"],
+[data-testid="stFileUploadDropzone"] {
+    background: #111111 !important;
+    background-color: #111111 !important;
+    border: 1.5px dashed rgba(131,58,180,0.32) !important;
+    border-radius: 10px !important;
+    padding: 2.2rem 1.5rem !important;
+    text-align: center !important;
+    box-shadow: none !important;
+    transition: border-color 0.2s ease !important;
+}
+[data-testid="stFileUploaderDropzone"]:hover,
+[data-testid="stFileUploadDropzone"]:hover {
+    background: #161616 !important;
+    background-color: #161616 !important;
+    border-color: rgba(225,48,108,0.50) !important;
+}
+
+/* Wrapper + all nested elements — covers any DOM depth across versions */
+[data-testid="stFileUploader"],
+[data-testid="stFileUploader"] > div,
+[data-testid="stFileUploader"] > div > div,
+[data-testid="stFileUploader"] > div > section,
 [data-testid="stFileUploader"] div,
 [data-testid="stFileUploader"] section {
     background: #111111 !important;
@@ -663,26 +685,9 @@ div.ghost-btn > div > button:hover, div.ghost-btn button:hover {
     box-shadow: none !important;
 }
 
-/* Outer wrapper itself: transparent (it's just a layout shell) */
-[data-testid="stFileUploader"] {
-    background: transparent !important;
-    background-color: transparent !important;
-}
-
-/* The section IS the dropzone — add dashed border + radius */
-[data-testid="stFileUploader"] section {
-    border: 1.5px dashed rgba(131,58,180,0.32) !important;
-    border-radius: 10px !important;
-    padding: 2.2rem 1.5rem !important;
-    text-align: center !important;
-    transition: border-color 0.2s ease !important;
-}
-[data-testid="stFileUploader"] section:hover {
-    background: #161616 !important;
-    border-color: rgba(225,48,108,0.50) !important;
-}
-
-/* Inner divs inside the section: no border (avoid double-border) */
+/* Inner divs inside the dropzone: no double-border */
+[data-testid="stFileUploaderDropzone"] div,
+[data-testid="stFileUploadDropzone"] div,
 [data-testid="stFileUploader"] section div,
 [data-testid="stFileUploader"] section > div {
     border: none !important;
