@@ -243,9 +243,9 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a,
 .stTabs [data-baseweb="tab"] {
     background: transparent !important; border-radius: 0 !important;
     color: var(--text-secondary) !important; font-weight: 600 !important;
-    font-size: 0.68rem !important; border: none !important;
-    padding: 0.52rem 0.9rem !important;
-    letter-spacing: 0.08em !important; text-transform: uppercase !important;
+    font-size: 0.62rem !important; border: none !important;
+    padding: 0.52rem 0.55rem !important;
+    letter-spacing: 0.07em !important; text-transform: uppercase !important;
     transition: color 0.18s !important;
     font-family: var(--font) !important;
     white-space: nowrap !important; flex-shrink: 0 !important;
@@ -648,18 +648,22 @@ div.ghost-btn > div > button:hover, div.ghost-btn button:hover {
 
 /* ──────────────────────────────────────────────────────
    FILE UPLOADER — nuclear dark override
+   Specificity guide: compound [a][b] = 0,2,0 beats [a] = 0,1,0
+   All dark-bg rules must be 0,2,0 or higher to win.
 ────────────────────────────────────────────────────── */
-[data-testid="stFileUploader"],
-[data-testid="stFileUploader"] > *,
-[data-testid="stFileUploader"] > * > * {
+
+/* Step 1 — wipe all inner divs/sections to transparent (0,2,0) */
+[data-testid="stFileUploader"] div,
+[data-testid="stFileUploader"] section {
     background: transparent !important;
     background-color: transparent !important;
     border: none !important;
     box-shadow: none !important;
 }
-/* The actual drop zone */
-[data-testid="stFileUploadDropzone"],
-section[data-testid="stFileUploadDropzone"] {
+
+/* Step 2 — dark bg on the dropzone itself (0,2,0 — same spec, comes AFTER so wins) */
+[data-testid="stFileUploader"] [data-testid="stFileUploadDropzone"],
+[data-testid="stFileUploader"] [data-baseweb="file-uploader"] {
     background: #111111 !important;
     background-color: #111111 !important;
     border: 1.5px dashed rgba(131,58,180,0.32) !important;
@@ -668,16 +672,18 @@ section[data-testid="stFileUploadDropzone"] {
     text-align: center !important;
     transition: border-color 0.2s ease, background 0.2s ease !important;
 }
-[data-testid="stFileUploadDropzone"]:hover,
-section[data-testid="stFileUploadDropzone"]:hover {
+[data-testid="stFileUploader"] [data-testid="stFileUploadDropzone"]:hover,
+[data-testid="stFileUploader"] [data-baseweb="file-uploader"]:hover {
     background: #161616 !important;
     border-color: rgba(225,48,108,0.50) !important;
 }
-/* All inner wrappers transparent */
-[data-testid="stFileUploadDropzone"] > *,
-section[data-testid="stFileUploadDropzone"] > * {
+
+/* Step 3 — wipe children INSIDE the dropzone back to transparent (0,3,0) */
+[data-testid="stFileUploader"] [data-testid="stFileUploadDropzone"] > *,
+[data-testid="stFileUploader"] [data-baseweb="file-uploader"] > div {
     background: transparent !important;
     background-color: transparent !important;
+    border: none !important;
 }
 /* Upload icon */
 [data-testid="stFileUploadDropzone"] svg,
