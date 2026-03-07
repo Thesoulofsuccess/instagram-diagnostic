@@ -647,14 +647,15 @@ div.ghost-btn > div > button:hover, div.ghost-btn button:hover {
 .stProgress > div { background: rgba(255,255,255,0.05) !important; border-radius: 0 !important; }
 
 /* ──────────────────────────────────────────────────────
-   FILE UPLOADER — dark override
-   Multi-version CSS: covers Streamlit 1.28–1.54+ via
-   direct testid targets + nested div/section variants.
-   JS injection in render_csv_import() is the nuclear fallback.
+   FILE UPLOADER — dark override (triple-layer)
+   Layer 1: direct testid selectors (Streamlit 1.28–1.54+)
+   Layer 2: #root-prefixed for max specificity — beats
+            styled-component double-class rules (.a .b)
+   Layer 3: section/div:has(input[type=file]) — version-
+            agnostic, targets by content not testid
 ────────────────────────────────────────────────────── */
 
-/* Direct dropzone targets: both old (stFileUploadDropzone)
-   and new (stFileUploaderDropzone) testid spellings */
+/* ── Layer 1: direct testid (both old + new spelling) ── */
 [data-testid="stFileUploaderDropzone"],
 [data-testid="stFileUploadDropzone"] {
     background: #111111 !important;
@@ -673,23 +674,42 @@ div.ghost-btn > div > button:hover, div.ghost-btn button:hover {
     border-color: rgba(225,48,108,0.50) !important;
 }
 
-/* Wrapper + all nested elements — covers any DOM depth across versions */
-[data-testid="stFileUploader"],
-[data-testid="stFileUploader"] > div,
-[data-testid="stFileUploader"] > div > div,
-[data-testid="stFileUploader"] > div > section,
-[data-testid="stFileUploader"] div,
-[data-testid="stFileUploader"] section {
+/* ── Layer 2: #root prefix — specificity (1,1,X) beats
+   any styled-component double-class (0,2,0) rule ── */
+#root [data-testid="stFileUploader"],
+#root [data-testid="stFileUploader"] > div,
+#root [data-testid="stFileUploader"] > div > div,
+#root [data-testid="stFileUploader"] > div > section,
+#root [data-testid="stFileUploader"] div,
+#root [data-testid="stFileUploader"] section {
     background: #111111 !important;
     background-color: #111111 !important;
     box-shadow: none !important;
+}
+
+/* ── Layer 3: :has(input[type=file]) — works on EVERY
+   Streamlit version regardless of testid/DOM structure ── */
+section:has(input[type="file"]) {
+    background: #111111 !important;
+    background-color: #111111 !important;
+    border: 1.5px dashed rgba(131,58,180,0.32) !important;
+    border-radius: 10px !important;
+    padding: 2.2rem 1.5rem !important;
+    text-align: center !important;
+    box-shadow: none !important;
+}
+section:has(input[type="file"]):hover {
+    background: #161616 !important;
+    background-color: #161616 !important;
+    border-color: rgba(225,48,108,0.50) !important;
 }
 
 /* Inner divs inside the dropzone: no double-border */
 [data-testid="stFileUploaderDropzone"] div,
 [data-testid="stFileUploadDropzone"] div,
 [data-testid="stFileUploader"] section div,
-[data-testid="stFileUploader"] section > div {
+[data-testid="stFileUploader"] section > div,
+section:has(input[type="file"]) div {
     border: none !important;
 }
 /* Upload icon */
