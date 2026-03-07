@@ -662,7 +662,8 @@ div.ghost-btn > div > button:hover, div.ghost-btn button:hover {
 }
 
 /* Step 2 — dark bg on the dropzone itself (0,2,0 — same spec, comes AFTER so wins) */
-[data-testid="stFileUploader"] [data-testid="stFileUploadDropzone"],
+/* NOTE: correct testid is stFileUploaderDropzone (with 'r'), not stFileUploadDropzone */
+[data-testid="stFileUploader"] [data-testid="stFileUploaderDropzone"],
 [data-testid="stFileUploader"] [data-baseweb="file-uploader"] {
     background: #111111 !important;
     background-color: #111111 !important;
@@ -672,22 +673,22 @@ div.ghost-btn > div > button:hover, div.ghost-btn button:hover {
     text-align: center !important;
     transition: border-color 0.2s ease, background 0.2s ease !important;
 }
-[data-testid="stFileUploader"] [data-testid="stFileUploadDropzone"]:hover,
+[data-testid="stFileUploader"] [data-testid="stFileUploaderDropzone"]:hover,
 [data-testid="stFileUploader"] [data-baseweb="file-uploader"]:hover {
     background: #161616 !important;
     border-color: rgba(225,48,108,0.50) !important;
 }
 
 /* Step 3 — wipe children INSIDE the dropzone back to transparent (0,3,0) */
-[data-testid="stFileUploader"] [data-testid="stFileUploadDropzone"] > *,
+[data-testid="stFileUploader"] [data-testid="stFileUploaderDropzone"] > *,
 [data-testid="stFileUploader"] [data-baseweb="file-uploader"] > div {
     background: transparent !important;
     background-color: transparent !important;
     border: none !important;
 }
 /* Upload icon */
-[data-testid="stFileUploadDropzone"] svg,
-section[data-testid="stFileUploadDropzone"] svg {
+[data-testid="stFileUploaderDropzone"] svg,
+[data-testid="stFileUploaderDropzoneInstructions"] svg {
     color: rgba(131,58,180,0.70) !important;
     width: 38px !important; height: 38px !important;
     margin-bottom: 0.6rem !important;
@@ -708,8 +709,7 @@ section[data-testid="stFileUploadDropzone"] svg {
     font-size: 0.68rem !important; font-weight: 400 !important;
 }
 /* Browse button — inline ghost link style */
-[data-testid="stFileUploadDropzone"] button,
-section[data-testid="stFileUploadDropzone"] button,
+[data-testid="stFileUploaderDropzone"] button,
 [data-testid="stFileUploader"] button {
     background: transparent !important;
     border: 1px solid rgba(131,58,180,0.40) !important;
@@ -723,7 +723,7 @@ section[data-testid="stFileUploadDropzone"] button,
     transition: all 0.18s ease !important;
     text-transform: uppercase !important;
 }
-[data-testid="stFileUploadDropzone"] button:hover,
+[data-testid="stFileUploaderDropzone"] button:hover,
 [data-testid="stFileUploader"] button:hover {
     background: rgba(131,58,180,0.10) !important;
     border-color: rgba(131,58,180,0.65) !important;
