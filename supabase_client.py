@@ -112,7 +112,7 @@ def reset_password_email(email: str):
     """Send a Supabase password-reset email. Returns (True, None) or (False, error_str)."""
     def _do():
         client = _make_client()
-        client.auth.reset_password_for_email(email)
+        client.auth.reset_password_email(email)
         return True
 
     result, err = _retry(_do, attempts=2, delay=2.0)
