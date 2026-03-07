@@ -208,6 +208,8 @@ header              { visibility: hidden !important; }
 [data-testid="stToolbar"] { display: none !important; }
 [data-testid="stDecoration"] { display: none !important; }
 [data-testid="stStatusWidget"] { display: none !important; }
+[data-testid="stDeployButton"] { display: none !important; }
+[data-testid="stManageAppButton"] { display: none !important; }
 .viewerBadge_container__1QSob { display: none !important; }
 
 .block-container {
