@@ -647,43 +647,44 @@ div.ghost-btn > div > button:hover, div.ghost-btn button:hover {
 .stProgress > div { background: rgba(255,255,255,0.05) !important; border-radius: 0 !important; }
 
 /* ──────────────────────────────────────────────────────
-   FILE UPLOADER — nuclear dark override
-   Specificity guide: compound [a][b] = 0,2,0 beats [a] = 0,1,0
-   All dark-bg rules must be 0,2,0 or higher to win.
+   FILE UPLOADER — dark override
+   Strategy: force #111111 directly on all divs/sections.
+   Do NOT wipe to transparent first — that exposes white
+   parent backgrounds when testid selectors miss.
+   The dropzone is a <section> element (confirmed in Streamlit
+   1.54.0 JS: const re=p("section",...)).
 ────────────────────────────────────────────────────── */
 
-/* Step 1 — wipe all inner divs/sections to transparent (0,2,0) */
+/* All nested divs and sections: dark background, no rogue borders */
 [data-testid="stFileUploader"] div,
 [data-testid="stFileUploader"] section {
-    background: transparent !important;
-    background-color: transparent !important;
-    border: none !important;
+    background: #111111 !important;
+    background-color: #111111 !important;
     box-shadow: none !important;
 }
 
-/* Step 2 — dark bg on the dropzone itself (0,2,0 — same spec, comes AFTER so wins) */
-/* NOTE: correct testid is stFileUploaderDropzone (with 'r'), not stFileUploadDropzone */
-[data-testid="stFileUploader"] [data-testid="stFileUploaderDropzone"],
-[data-testid="stFileUploader"] [data-baseweb="file-uploader"] {
-    background: #111111 !important;
-    background-color: #111111 !important;
+/* Outer wrapper itself: transparent (it's just a layout shell) */
+[data-testid="stFileUploader"] {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+/* The section IS the dropzone — add dashed border + radius */
+[data-testid="stFileUploader"] section {
     border: 1.5px dashed rgba(131,58,180,0.32) !important;
     border-radius: 10px !important;
     padding: 2.2rem 1.5rem !important;
     text-align: center !important;
-    transition: border-color 0.2s ease, background 0.2s ease !important;
+    transition: border-color 0.2s ease !important;
 }
-[data-testid="stFileUploader"] [data-testid="stFileUploaderDropzone"]:hover,
-[data-testid="stFileUploader"] [data-baseweb="file-uploader"]:hover {
+[data-testid="stFileUploader"] section:hover {
     background: #161616 !important;
     border-color: rgba(225,48,108,0.50) !important;
 }
 
-/* Step 3 — wipe children INSIDE the dropzone back to transparent (0,3,0) */
-[data-testid="stFileUploader"] [data-testid="stFileUploaderDropzone"] > *,
-[data-testid="stFileUploader"] [data-baseweb="file-uploader"] > div {
-    background: transparent !important;
-    background-color: transparent !important;
+/* Inner divs inside the section: no border (avoid double-border) */
+[data-testid="stFileUploader"] section div,
+[data-testid="stFileUploader"] section > div {
     border: none !important;
 }
 /* Upload icon */
