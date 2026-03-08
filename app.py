@@ -725,18 +725,19 @@ hr { border-color: rgba(255,255,255,0.06) !important; margin: 2rem 0 !important;
 .perf-top-header   { background: rgba(0,229,160,0.06); border: 1px solid rgba(0,229,160,0.14); color: #00E5A0; }
 .perf-under-header { background: rgba(255,61,113,0.06); border: 1px solid rgba(255,61,113,0.14); color: #FF3D71; }
 .perf-video-card {
-    display: flex; gap: 0.9rem; padding: 0.85rem;
+    display: flex; align-items: flex-start; gap: 0.9rem; padding: 0.85rem;
     background: #111111; border: 1px solid rgba(255,255,255,0.06);
-    margin-bottom: 2px; transition: background 0.15s;
+    border-radius: 8px; margin-bottom: 4px; transition: background 0.15s;
 }
 .perf-video-card:hover { background: #151515; }
 .perf-thumb {
     width: 56px; flex-shrink: 0; aspect-ratio: 9/16;
     background: #050505; border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 4px;
     display: flex; align-items: center; justify-content: center;
 }
 .perf-thumb-icon { font-size: 1rem; opacity: 0.18; }
-.perf-card-body  { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: space-between; }
+.perf-card-body  { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: flex-start; padding-top: 0.1rem; }
 .perf-title {
     font-size: 0.78rem; font-weight: 500; color: rgba(255,255,255,0.70);
     line-height: 1.45; margin-bottom: 0.55rem;
