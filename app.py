@@ -1451,62 +1451,21 @@ def render_auth_page():
 # CSV IMPORT TAB
 # ─────────────────────────────────────────────────
 def render_csv_import():
-    how_html = (
-        '<p style="font-size:0.875rem;color:#888888;line-height:1.75;margin:0 0 0.85rem;">'
-        'Upload a CSV export from Meta Business Suite to import multiple reels at once. '
-        'Column names are detected automatically.</p>'
-        '<ol style="font-size:0.82rem;color:#888888;line-height:2.1;margin:0;padding-left:1.25rem;">'
-        '<li>Go to <span style="color:rgba(255,255,255,0.65);">Meta Business Suite → Insights → Content</span></li>'
-        '<li>Filter by <span style="color:rgba(255,255,255,0.65);">Reels</span> and set your date range</li>'
-        '<li>Click <span style="color:rgba(255,255,255,0.65);">Export → Export as CSV</span></li>'
-        '<li>Upload the file below</li>'
-        '</ol>'
-    )
-    st.markdown(theme_engine.rio_card("How It Works", how_html), unsafe_allow_html=True)
-
-    # ── Upload zone ────────────────────────────────────────────────────
-    st.markdown(
-        '<div class="section-label" style="margin-bottom:0.6rem;">Upload Your CSV</div>',
-        unsafe_allow_html=True,
-    )
-
-    # Nuclear JS: force dark background on file uploader regardless of
-    # Streamlit version. Targets both old (stFileUploadDropzone) and new
-    # (stFileUploaderDropzone) testid spellings via inline !important styles
-    # which override all CSS specificity and styled-component conflicts.
-    components.html(
-        """<script>
-        (function () {
-            function forceDark() {
-                try {
-                    var d = parent.document;
-                    var sels = [
-                        '[data-testid="stFileUploaderDropzone"]',
-                        '[data-testid="stFileUploadDropzone"]',
-                        '[data-testid="stFileUploader"] section',
-                        '[data-testid="stFileUploader"] > div',
-                        '[data-testid="stFileUploader"] > div > div',
-                    ];
-                    sels.forEach(function (s) {
-                        d.querySelectorAll(s).forEach(function (el) {
-                            el.style.setProperty('background-color', '#111111', 'important');
-                            el.style.setProperty('background', '#111111', 'important');
-                        });
-                    });
-                } catch (e) {}
-            }
-            [0, 150, 400, 900, 2000].forEach(function (ms) {
-                setTimeout(forceDark, ms);
-            });
-            try {
-                new MutationObserver(forceDark).observe(
-                    parent.document.body, { childList: true, subtree: true }
-                );
-            } catch (e) {}
-        })();
-        </script>""",
-        height=0,
-    )
+    # ── Section header + SVG gradient defs for the cloud icon ──────────
+    st.markdown("""
+    <svg xmlns="http://www.w3.org/2000/svg"
+         style="position:absolute;width:0;height:0;overflow:hidden;" aria-hidden="true">
+      <defs>
+        <linearGradient id="riq-upload-grad" x1="0%" y1="100%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#E1306C"/>
+          <stop offset="100%" stop-color="#FCAF45"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    <h3 class="upload-title">Upload Content</h3>
+    <p class="upload-sub-text">Select your Reels CSV from Meta Business Suite to begin
+    processing and AI diagnostics.</p>
+    """, unsafe_allow_html=True)
 
     uploaded = st.file_uploader(
         "Drop your CSV here or click to browse",
