@@ -669,8 +669,8 @@ div.ghost-btn > div > button:hover, div.ghost-btn button:hover {
     background-color: rgba(255,255,255,0.016) !important;
     border: 1.5px dashed rgba(131,58,180,0.28) !important;
     border-radius: 10px !important;
-    padding: 2.8rem 2rem 2.4rem !important;
-    min-height: 200px !important;
+    padding: 3.5rem 2rem 3.2rem !important;
+    min-height: 260px !important;
     display: flex !important; flex-direction: column !important;
     align-items: center !important; gap: 0 !important;
     width: 100% !important; box-sizing: border-box !important;
@@ -694,16 +694,18 @@ div:has(> input[type="file"]) {
     background: transparent !important;
 }
 
-/* Cloud upload icon — color sets currentColor for fill AND stroke (no explicit fill override) */
+/* Cloud upload icon — hide native SVG (background rect inherits currentColor → purple patch) */
 [data-testid="stFileUploaderDropzoneInstructions"] svg {
-    width: 48px !important; height: 48px !important;
-    margin-bottom: 0.9rem !important;
-    color: rgba(131,58,180,0.9) !important;
+    display: none !important;
 }
-/* Only target paths (not all descendants — avoids filling background rects) */
-[data-testid="stFileUploaderDropzoneInstructions"] svg path {
-    fill: rgba(131,58,180,0.9) !important;
-    stroke: rgba(131,58,180,0.9) !important;
+/* Inject clean cloud-upload icon via ::before — no currentColor cascade issue */
+[data-testid="stFileUploaderDropzoneInstructions"]::before {
+    content: "" !important;
+    display: block !important;
+    width: 52px !important;
+    height: 52px !important;
+    margin: 0 auto 1rem !important;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23833AB4' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='16 16 12 12 8 16'/%3E%3Cline x1='12' y1='12' x2='12' y2='21'/%3E%3Cpath d='M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3'/%3E%3C/svg%3E") center/contain no-repeat !important;
 }
 
 /* Instruction text */
