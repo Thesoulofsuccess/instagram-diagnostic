@@ -735,12 +735,12 @@ section:has(input[type="file"]) {
    TABS — kill the white scroll-overflow arrow
 ────────────────────────────────────────────────────── */
 /* Hide ALL scroll/overflow arrow buttons that appear beside the tab list */
-.stTabs [data-baseweb="tab-list"] button,
-.stTabs [data-baseweb="tab-list"] > button,
+/* Hide ONLY scroll/overflow arrow buttons — NOT the actual tab items.
+   Real tab items carry data-baseweb="tab"; scroll arrows do not. */
+.stTabs [data-baseweb="tab-list"] button:not([data-baseweb="tab"]),
 [data-baseweb="tab-list"] ~ button,
 [data-baseweb="tab-list"] + button,
-button[data-testid="stTabsScrollButton"],
-div[data-testid="stTabs"] > div > button {
+button[data-testid="stTabsScrollButton"] {
     display: none !important;
 }
 /* The stTabs outer wrapper — kill any white bleed */
