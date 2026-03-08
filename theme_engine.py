@@ -659,7 +659,8 @@ div.ghost-btn > div > button:hover, div.ghost-btn button:hover {
     background-color: rgba(255,255,255,0.016) !important;
     border: 1.5px dashed rgba(131,58,180,0.28) !important;
     border-radius: 10px !important;
-    padding: 2.4rem 1.5rem 2rem !important;
+    padding: 3.2rem 2rem 2.8rem !important;
+    min-height: 220px !important;
     display: flex !important; flex-direction: column !important;
     align-items: center !important; gap: 0 !important;
     width: 100% !important; box-sizing: border-box !important;
@@ -704,18 +705,18 @@ div:has(> input[type="file"]) {
     background: transparent !important;
 }
 
-/* Gradient cloud icon — uses SVG linearGradient #riq-upload-grad
-   injected inline by render_csv_import() */
+/* Cloud upload icon — solid brand pink, scaled up for breathing room */
 [data-testid="stFileUploaderDropzone"] svg,
 [data-testid="stFileUploaderDropzoneInstructions"] svg {
-    width: 42px !important; height: 42px !important;
-    margin-bottom: 0.7rem !important;
+    width: 48px !important; height: 48px !important;
+    margin-bottom: 0.9rem !important;
     overflow: visible !important;
-    color: #FCAF45 !important;           /* fallback if url() not supported */
+    color: #E1306C !important;
 }
 [data-testid="stFileUploaderDropzoneInstructions"] svg path,
-[data-testid="stFileUploaderDropzoneInstructions"] svg *:not(defs):not(linearGradient):not(stop) {
-    fill: url(#riq-upload-grad) !important;
+[data-testid="stFileUploaderDropzoneInstructions"] svg * {
+    fill: #E1306C !important;
+    stroke: none !important;
 }
 
 /* Instruction text */

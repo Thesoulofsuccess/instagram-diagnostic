@@ -1451,17 +1451,8 @@ def render_auth_page():
 # CSV IMPORT TAB
 # ─────────────────────────────────────────────────
 def render_csv_import():
-    # ── Section header + SVG gradient defs for the cloud icon ──────────
+    # ── Section header ──────────────────────────────────────────────────
     st.markdown("""
-    <svg xmlns="http://www.w3.org/2000/svg"
-         style="position:absolute;width:0;height:0;overflow:hidden;" aria-hidden="true">
-      <defs>
-        <linearGradient id="riq-upload-grad" x1="0%" y1="100%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#E1306C"/>
-          <stop offset="100%" stop-color="#FCAF45"/>
-        </linearGradient>
-      </defs>
-    </svg>
     <h3 class="upload-title">Upload Content</h3>
     <p class="upload-sub-text">Select your Reels CSV from Meta Business Suite to begin
     processing and AI diagnostics.</p>
