@@ -11,7 +11,7 @@ except Exception:
 
 from diagnostic_engine import run_diagnostic
 from ai_report import generate_ai_report, generate_pre_score_tips, generate_content_brief
-from supabase_client import sign_up, sign_in, reset_password_email, save_reel_analysis, get_user_reels
+from supabase_client import sign_up, sign_in, reset_password_email, save_reel_analysis, get_user_reels, delete_reel
 from patterns import compute_patterns, generate_ai_content, MIN_REELS
 from pre_score_engine import run_pre_score
 from email_digest import build_digest_data, build_digest_html, send_digest_email
@@ -751,6 +751,25 @@ hr { border-color: rgba(255,255,255,0.06) !important; margin: 2rem 0 !important;
 .ps-val { font-size: 0.70rem; font-weight: 700; color: rgba(255,255,255,0.72); font-family: 'Inter', sans-serif; line-height: 1; }
 .ps-lbl { font-size: 0.46rem; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase; color: rgba(255,255,255,0.22); margin-top: 0.18rem; }
 .perf-empty { font-size: 0.78rem; color: rgba(255,255,255,0.18); padding: 1.2rem 1rem; font-style: italic; }
+
+/* ── Underperformer delete button ── */
+.del-btn-wrap > div > button {
+    background: transparent !important;
+    border: 1px solid rgba(255,61,113,0.18) !important;
+    color: rgba(255,61,113,0.45) !important;
+    border-radius: 5px !important;
+    font-size: 0.67rem !important; font-weight: 500 !important;
+    padding: 0.22rem 0.7rem !important;
+    height: auto !important; min-height: 0 !important;
+    margin-bottom: 4px !important;
+    text-transform: none !important; letter-spacing: 0.01em !important;
+    transition: all 0.15s ease !important;
+}
+.del-btn-wrap > div > button:hover {
+    border-color: rgba(255,61,113,0.50) !important;
+    color: rgba(255,61,113,0.90) !important;
+    background: rgba(255,61,113,0.06) !important;
+}
 
 /* ── Patterns action buttons — sleek 1px ghost ── */
 .pat-refresh-btn > div > button,
@@ -2337,11 +2356,12 @@ def render_patterns():
         with col_u:
             st.markdown('<div class="perf-col-header perf-under-header">&#9660;&nbsp; Underperformers</div>', unsafe_allow_html=True)
             if under:
-                for r in under[:3]:
-                    cap   = (r.get("caption") or r.get("category") or "Untitled Reel")[:80]
-                    views = r.get("views", 0)
-                    saves = r.get("saves", 0)
-                    ret   = (r.get("retention_ratio") or 0) * 100
+                for i, r in enumerate(under[:3]):
+                    reel_id = r.get("id", "")
+                    cap     = (r.get("caption") or r.get("category") or "Untitled Reel")[:80]
+                    views   = r.get("views", 0)
+                    saves   = r.get("saves", 0)
+                    ret     = (r.get("retention_ratio") or 0) * 100
                     st.markdown(
                         '<div class="perf-video-card">'
                         '<div class="perf-thumb"><span class="perf-thumb-icon">&#9654;</span></div>'
@@ -2354,6 +2374,24 @@ def render_patterns():
                         '</div></div></div>',
                         unsafe_allow_html=True,
                     )
+                    if reel_id:
+                        st.markdown('<div class="del-btn-wrap">', unsafe_allow_html=True)
+                        if st.button("✕  Remove entry", key=f"del_under_{i}_{reel_id}"):
+                            ok, err = delete_reel(
+                                reel_id,
+                                st.session_state.user_id,
+                                st.session_state.access_token,
+                                st.session_state.refresh_token,
+                            )
+                            if ok:
+                                st.session_state.patterns_loaded = False
+                                st.session_state.patterns_data   = None
+                                st.session_state.patterns_insights = None
+                                st.session_state.patterns_roadmap  = None
+                                st.rerun()
+                            else:
+                                st.error(f"Could not delete: {err}")
+                        st.markdown('</div>', unsafe_allow_html=True)
             else:
                 st.markdown('<div class="perf-empty">All reels are performing well!</div>', unsafe_allow_html=True)
 

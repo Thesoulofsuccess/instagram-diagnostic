@@ -216,3 +216,16 @@ def save_reel_analysis(
     if err:
         return False, err
     return True, None
+
+
+def delete_reel(reel_id: str, user_id: str, access_token: str, refresh_token: str):
+    """Delete a single reel row owned by the current user."""
+    def _do():
+        client = _make_client(access_token, refresh_token)
+        client.table("reels").delete().eq("id", reel_id).eq("user_id", user_id).execute()
+        return True
+
+    result, err = _retry(_do, attempts=2, delay=2.0)
+    if err:
+        return False, err
+    return True, None
