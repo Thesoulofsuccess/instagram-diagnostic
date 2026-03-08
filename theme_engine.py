@@ -638,7 +638,7 @@ div.ghost-btn > div > button:hover, div.ghost-btn button:hover {
    FILE UPLOADER — premium two-level card + dashed dropzone
 ────────────────────────────────────────────────────── */
 
-/* LEVEL 1 — outer card (solid border, no dashes) */
+/* LEVEL 1 — outer card */
 [data-testid="stFileUploader"] {
     background: #111111 !important;
     background-color: #111111 !important;
@@ -653,43 +653,32 @@ div.ghost-btn > div > button:hover, div.ghost-btn button:hover {
     border-color: rgba(131,58,180,0.28) !important;
 }
 
-/* LEVEL 2 — inner dashed dropzone (column-flex, centered) */
-#root [data-testid="stFileUploader"] > div {
-    background: rgba(255,255,255,0.016) !important;
-    background-color: rgba(255,255,255,0.016) !important;
-    border: 1.5px dashed rgba(131,58,180,0.28) !important;
-    border-radius: 10px !important;
-    padding: 3.2rem 2rem 2.8rem !important;
-    min-height: 220px !important;
-    display: flex !important; flex-direction: column !important;
-    align-items: center !important; gap: 0 !important;
-    width: 100% !important; box-sizing: border-box !important;
-    transition: border-color 0.2s ease !important;
-}
-#root [data-testid="stFileUploader"]:hover > div {
-    border-color: rgba(225,48,108,0.42) !important;
-}
-
-/* All other inner divs — transparent, no border */
-#root [data-testid="stFileUploader"] div {
+/* Strip all inner divs — transparent, no border, no padding */
+[data-testid="stFileUploader"] div,
+[data-testid="stFileUploader"] > div {
     background: transparent !important;
     background-color: transparent !important;
     border: none !important; box-shadow: none !important;
     padding: 0 !important;
 }
 
-/* Dropzone section + fallback selectors */
-#root [data-testid="stFileUploader"] section,
-[data-testid="stFileUploaderDropzone"],
-[data-testid="stFileUploadDropzone"],
-section:has(input[type="file"]) {
-    background: transparent !important;
-    background-color: transparent !important;
-    border: none !important; box-shadow: none !important;
-    padding: 0 !important; margin: 0 !important;
-    position: relative !important; top: 0 !important;
+/* LEVEL 2 — dashed dropzone: targets the SECTION which contains icon + text + button */
+[data-testid="stFileUploader"] section[data-testid="stFileUploaderDropzone"],
+[data-testid="stFileUploader"] [data-testid="stFileUploaderDropzone"] {
+    background: rgba(255,255,255,0.016) !important;
+    background-color: rgba(255,255,255,0.016) !important;
+    border: 1.5px dashed rgba(131,58,180,0.28) !important;
+    border-radius: 10px !important;
+    padding: 2.8rem 2rem 2.4rem !important;
+    min-height: 200px !important;
     display: flex !important; flex-direction: column !important;
-    align-items: center !important; width: 100% !important;
+    align-items: center !important; gap: 0 !important;
+    width: 100% !important; box-sizing: border-box !important;
+    transition: border-color 0.2s ease !important;
+}
+[data-testid="stFileUploader"]:hover section[data-testid="stFileUploaderDropzone"],
+[data-testid="stFileUploader"]:hover [data-testid="stFileUploaderDropzone"] {
+    border-color: rgba(225,48,108,0.42) !important;
 }
 
 /* Hidden file input wrapper */
@@ -705,18 +694,16 @@ div:has(> input[type="file"]) {
     background: transparent !important;
 }
 
-/* Cloud upload icon — solid brand pink, scaled up for breathing room */
-[data-testid="stFileUploaderDropzone"] svg,
+/* Cloud upload icon — color sets currentColor for fill AND stroke (no explicit fill override) */
 [data-testid="stFileUploaderDropzoneInstructions"] svg {
     width: 48px !important; height: 48px !important;
     margin-bottom: 0.9rem !important;
-    overflow: visible !important;
-    color: #E1306C !important;
+    color: rgba(131,58,180,0.9) !important;
 }
-[data-testid="stFileUploaderDropzoneInstructions"] svg path,
-[data-testid="stFileUploaderDropzoneInstructions"] svg * {
-    fill: #E1306C !important;
-    stroke: none !important;
+/* Only target paths (not all descendants — avoids filling background rects) */
+[data-testid="stFileUploaderDropzoneInstructions"] svg path {
+    fill: rgba(131,58,180,0.9) !important;
+    stroke: rgba(131,58,180,0.9) !important;
 }
 
 /* Instruction text */

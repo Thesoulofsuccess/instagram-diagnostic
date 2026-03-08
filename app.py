@@ -2307,38 +2307,54 @@ def render_patterns():
     if top or under:
         st.markdown('<div class="section-label" style="margin-top:2rem;">Performance Spectrum</div>', unsafe_allow_html=True)
 
-        def _video_card(r: dict) -> str:
-            caption   = (r.get("caption") or r.get("category") or "Untitled Reel")[:80]
-            views     = r.get("views", 0)
-            saves     = r.get("saves", 0)
-            ret       = (r.get("retention_ratio") or 0) * 100
-            return f"""
-            <div class="perf-video-card">
-                <div class="perf-thumb"><span class="perf-thumb-icon">▶</span></div>
-                <div class="perf-card-body">
-                    <div class="perf-title">{caption}</div>
-                    <div class="perf-stat-row">
-                        <div class="perf-stat"><div class="ps-val">{_fmt_k(views)}</div><div class="ps-lbl">Views</div></div>
-                        <div class="perf-stat"><div class="ps-val">{saves}</div><div class="ps-lbl">Saves</div></div>
-                        <div class="perf-stat"><div class="ps-val">{ret:.0f}%</div><div class="ps-lbl">Ret.</div></div>
-                    </div>
-                </div>
-            </div>"""
+        # Use st.columns for reliable two-column layout (avoids markdown HTML-block issues)
+        col_t, col_u = st.columns(2, gap="small")
 
-        top_html   = "".join(_video_card(r) for r in top[:3])
-        under_html = "".join(_video_card(r) for r in under[:3])
-        st.markdown(f"""
-        <div class="perf-spectrum">
-            <div class="perf-col">
-                <div class="perf-col-header perf-top-header">▲  Top Performers</div>
-                {top_html or '<div class="perf-empty">No top performers yet</div>'}
-            </div>
-            <div class="perf-col">
-                <div class="perf-col-header perf-under-header">▼  Underperformers</div>
-                {under_html or '<div class="perf-empty">All reels are performing well!</div>'}
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+        with col_t:
+            st.markdown('<div class="perf-col-header perf-top-header">&#9650;&nbsp; Top Performers</div>', unsafe_allow_html=True)
+            if top:
+                for r in top[:3]:
+                    cap   = (r.get("caption") or r.get("category") or "Untitled Reel")[:80]
+                    views = r.get("views", 0)
+                    saves = r.get("saves", 0)
+                    ret   = (r.get("retention_ratio") or 0) * 100
+                    st.markdown(
+                        '<div class="perf-video-card">'
+                        '<div class="perf-thumb"><span class="perf-thumb-icon">&#9654;</span></div>'
+                        '<div class="perf-card-body">'
+                        f'<div class="perf-title">{cap}</div>'
+                        '<div class="perf-stat-row">'
+                        f'<div class="perf-stat"><div class="ps-val">{_fmt_k(views)}</div><div class="ps-lbl">Views</div></div>'
+                        f'<div class="perf-stat"><div class="ps-val">{saves}</div><div class="ps-lbl">Saves</div></div>'
+                        f'<div class="perf-stat"><div class="ps-val">{ret:.0f}%</div><div class="ps-lbl">Ret.</div></div>'
+                        '</div></div></div>',
+                        unsafe_allow_html=True,
+                    )
+            else:
+                st.markdown('<div class="perf-empty">No top performers yet</div>', unsafe_allow_html=True)
+
+        with col_u:
+            st.markdown('<div class="perf-col-header perf-under-header">&#9660;&nbsp; Underperformers</div>', unsafe_allow_html=True)
+            if under:
+                for r in under[:3]:
+                    cap   = (r.get("caption") or r.get("category") or "Untitled Reel")[:80]
+                    views = r.get("views", 0)
+                    saves = r.get("saves", 0)
+                    ret   = (r.get("retention_ratio") or 0) * 100
+                    st.markdown(
+                        '<div class="perf-video-card">'
+                        '<div class="perf-thumb"><span class="perf-thumb-icon">&#9654;</span></div>'
+                        '<div class="perf-card-body">'
+                        f'<div class="perf-title">{cap}</div>'
+                        '<div class="perf-stat-row">'
+                        f'<div class="perf-stat"><div class="ps-val">{_fmt_k(views)}</div><div class="ps-lbl">Views</div></div>'
+                        f'<div class="perf-stat"><div class="ps-val">{saves}</div><div class="ps-lbl">Saves</div></div>'
+                        f'<div class="perf-stat"><div class="ps-val">{ret:.0f}%</div><div class="ps-lbl">Ret.</div></div>'
+                        '</div></div></div>',
+                        unsafe_allow_html=True,
+                    )
+            else:
+                st.markdown('<div class="perf-empty">All reels are performing well!</div>', unsafe_allow_html=True)
 
 
 # ─────────────────────────────────────────────────
