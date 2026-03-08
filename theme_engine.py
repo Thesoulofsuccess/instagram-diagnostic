@@ -635,19 +635,16 @@ div.ghost-btn > div > button:hover, div.ghost-btn button:hover {
 .stProgress > div { background: rgba(255,255,255,0.05) !important; border-radius: 0 !important; }
 
 /* ──────────────────────────────────────────────────────
-   FILE UPLOADER — one clean dark box
-   Border lives on the OUTER wrapper only so the dropzone
-   AND browse button sit together inside a single box.
-   Inner elements: dark bg, no border.
+   FILE UPLOADER — single unified dark box, centered layout
 ────────────────────────────────────────────────────── */
 
-/* ── Outer wrapper = the one visible box ── */
+/* Outer wrapper — the only visible border/bg */
 [data-testid="stFileUploader"] {
     background: #111111 !important;
     background-color: #111111 !important;
     border: 1.5px dashed rgba(131,58,180,0.32) !important;
     border-radius: 10px !important;
-    padding: 2.8rem 1.5rem 2rem !important;
+    padding: 0 !important;
     min-height: 150px !important;
     box-shadow: none !important;
     transition: border-color 0.2s ease !important;
@@ -658,48 +655,75 @@ div.ghost-btn > div > button:hover, div.ghost-btn button:hover {
     border-color: rgba(225,48,108,0.50) !important;
 }
 
-/* ── All inner structural elements: dark bg, NO border ──
-   Prevents any inner div/section getting its own box.
-   #root prefix beats any styled-component double-class rule. ── */
-#root [data-testid="stFileUploader"] > div,
-#root [data-testid="stFileUploader"] > div > div,
-#root [data-testid="stFileUploader"] > div > section,
-#root [data-testid="stFileUploader"] div,
+/* Direct-child div — column-flex so icon/text/button stack centered */
+#root [data-testid="stFileUploader"] > div {
+    background: #111111 !important;
+    background-color: #111111 !important;
+    border: none !important; box-shadow: none !important;
+    padding: 2.2rem 1.5rem 1.8rem !important;
+    display: flex !important; flex-direction: column !important;
+    align-items: center !important; gap: 0 !important;
+    width: 100% !important;
+}
+#root [data-testid="stFileUploader"]:hover > div {
+    background: #161616 !important;
+    background-color: #161616 !important;
+}
+
+/* All inner divs — match outer bg, no border */
+#root [data-testid="stFileUploader"] div {
+    background: #111111 !important;
+    background-color: #111111 !important;
+    border: none !important; box-shadow: none !important;
+    padding: 0 !important;
+}
+#root [data-testid="stFileUploader"]:hover div {
+    background: #161616 !important;
+    background-color: #161616 !important;
+}
+
+/* Dropzone section — centered column, no own bg/border/margin */
+#root [data-testid="stFileUploader"] section,
 [data-testid="stFileUploaderDropzone"],
 [data-testid="stFileUploadDropzone"],
+section:has(input[type="file"]) {
+    background: #111111 !important;
+    background-color: #111111 !important;
+    border: none !important; box-shadow: none !important;
+    padding: 0 !important; margin: 0 !important;
+    position: relative !important; top: 0 !important;
+    display: flex !important; flex-direction: column !important;
+    align-items: center !important; width: 100% !important;
+}
+#root [data-testid="stFileUploader"]:hover section,
+[data-testid="stFileUploader"]:hover [data-testid="stFileUploaderDropzone"],
+[data-testid="stFileUploader"]:hover [data-testid="stFileUploadDropzone"] {
+    background: #161616 !important;
+    background-color: #161616 !important;
+}
+
+/* Hidden file input wrapper */
 div:has(> input[type="file"]) {
     background: transparent !important;
-    background-color: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    padding: 0 !important;
+    border: none !important; box-shadow: none !important; padding: 0 !important;
 }
-/* Dropzone section — reset any Streamlit negative-margin that
-   could float the icon above the outer box top edge */
-#root [data-testid="stFileUploader"] section,
-section:has(input[type="file"]) {
-    background: transparent !important;
-    background-color: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    margin-top: 0 !important;
-    position: relative !important;
-    top: 0 !important;
-}
-/* Upload icon */
-[data-testid="stFileUploaderDropzone"] svg,
-[data-testid="stFileUploaderDropzoneInstructions"] svg {
-    color: rgba(131,58,180,0.70) !important;
-    width: 38px !important; height: 38px !important;
-    margin-bottom: 0.6rem !important;
-}
-/* Instruction text */
+
+/* Instructions div — centered */
 [data-testid="stFileUploaderDropzoneInstructions"] {
     display: flex !important; flex-direction: column !important;
     align-items: center !important; gap: 0.25rem !important;
     background: transparent !important;
 }
+
+/* Upload icon */
+[data-testid="stFileUploaderDropzone"] svg,
+[data-testid="stFileUploaderDropzoneInstructions"] svg {
+    color: rgba(131,58,180,0.70) !important;
+    width: 38px !important; height: 38px !important;
+    margin-bottom: 0.5rem !important;
+}
+
+/* Instruction text */
 [data-testid="stFileUploaderDropzoneInstructions"] span {
     color: rgba(255,255,255,0.65) !important;
     font-size: 0.82rem !important; font-weight: 600 !important;
@@ -709,7 +733,8 @@ section:has(input[type="file"]) {
     color: rgba(255,255,255,0.28) !important;
     font-size: 0.68rem !important; font-weight: 400 !important;
 }
-/* Browse button — inline ghost link style */
+
+/* Browse button — centered below the text, ghost style */
 [data-testid="stFileUploaderDropzone"] button,
 [data-testid="stFileUploader"] button {
     background: transparent !important;
@@ -719,7 +744,7 @@ section:has(input[type="file"]) {
     font-size: 0.68rem !important; font-weight: 600 !important;
     letter-spacing: 0.08em !important;
     padding: 0.28rem 0.9rem !important;
-    margin-top: 0.65rem !important;
+    margin-top: 0.75rem !important;
     height: auto !important; min-height: 0 !important;
     transition: all 0.18s ease !important;
     text-transform: uppercase !important;
@@ -734,7 +759,6 @@ section:has(input[type="file"]) {
 /* ──────────────────────────────────────────────────────
    TABS — kill the white scroll-overflow arrow
 ────────────────────────────────────────────────────── */
-/* Hide ALL scroll/overflow arrow buttons that appear beside the tab list */
 /* Hide ONLY scroll/overflow arrow buttons — NOT the actual tab items.
    Real tab items carry data-baseweb="tab"; scroll arrows do not. */
 .stTabs [data-baseweb="tab-list"] button:not([data-baseweb="tab"]),
