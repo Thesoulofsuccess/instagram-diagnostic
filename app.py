@@ -606,7 +606,7 @@ hr { border-color: rgba(255,255,255,0.06) !important; margin: 2rem 0 !important;
 .stNumberInput button { background: rgba(255,255,255,0.03) !important; border-color: rgba(255,255,255,0.10) !important; color: rgba(255,255,255,0.35) !important; }
 
 /* ══════════════════════════════════════
-   PATTERNS TAB
+   PATTERNS TAB — premium redesign
 ══════════════════════════════════════ */
 .patterns-hero { text-align: center; padding: 1.25rem 0 1rem; }
 .patterns-hero h2 {
@@ -634,88 +634,141 @@ hr { border-color: rgba(255,255,255,0.06) !important; margin: 2rem 0 !important;
     display: block; margin-bottom: 0.85rem; line-height: 1;
 }
 
-/* Flush bench grid */
-.bench-grid {
+/* ── Key Metric Cards ── */
+.pat-metrics-grid {
     display: grid; grid-template-columns: repeat(2, 1fr);
-    gap: 1px; margin: 1.4rem 0;
+    gap: 1px; margin: 1.4rem 0 0.8rem;
     background: rgba(255,255,255,0.07);
     border: 1px solid rgba(255,255,255,0.07);
 }
-@media (min-width: 580px) { .bench-grid { grid-template-columns: repeat(4, 1fr); } }
-.bench-card {
-    background: #111111; padding: 1.35rem 1rem; text-align: center;
-    position: relative; overflow: hidden;
-    transition: background 0.18s;
+@media (min-width: 580px) { .pat-metrics-grid { grid-template-columns: repeat(4, 1fr); } }
+.pat-metric-card {
+    background: #111111; padding: 1.4rem 1.1rem 1.2rem;
+    position: relative; overflow: hidden; transition: background 0.18s;
 }
-.bench-card:hover { background: #111111; }
-.bench-card::before {
+.pat-metric-card:hover { background: #151515; }
+.pat-metric-card::before {
     content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
 }
-.bench-views::before  { background: linear-gradient(90deg, #6600CC, #BB00FF); }
-.bench-ret::before    { background: linear-gradient(90deg, #0055BB, #0099FF); }
-.bench-eng::before    { background: linear-gradient(90deg, #AA0044, #FF2277); }
-.bench-save::before   { background: linear-gradient(90deg, #008855, #00E5A0); }
-.bench-hook::before   { background: linear-gradient(90deg, #AA6600, #FFB020); }
-
-.bench-val {
-    font-family: 'Inter', sans-serif; font-size: 1.65rem; font-weight: 800; line-height: 1;
+.pm-views::before { background: linear-gradient(90deg, #6600CC, #BB00FF); }
+.pm-ret::before   { background: linear-gradient(90deg, #0055BB, #0099FF); }
+.pm-save::before  { background: linear-gradient(90deg, #008855, #00E5A0); }
+.pm-hook::before  { background: linear-gradient(90deg, #AA6600, #FFB020); }
+.pat-metric-top {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 0.6rem;
 }
-.bench-views .bench-val { color: #BB00FF; }
-.bench-ret .bench-val   { color: #0099FF; }
-.bench-eng .bench-val   { color: #FF2277; }
-.bench-save .bench-val  { color: #00E5A0; }
-.bench-hook .bench-val  { color: #FFB020; }
-
-.bench-label {
-    font-size: 0.56rem; font-weight: 700; letter-spacing: 0.14em;
+.pat-metric-label {
+    font-size: 0.52rem; font-weight: 700; letter-spacing: 0.16em;
     text-transform: uppercase; color: rgba(255,255,255,0.22);
-    margin-top: 0.45rem; font-family: 'Inter', sans-serif;
-}
-
-.insights-box {
-    background: #111111;
-    border: 1px solid rgba(255,255,255,0.08);
-    border-left: 2px solid #833AB4;
-    padding: 1.65rem 1.8rem; margin: 1.4rem 0;
-}
-.insights-box p { color: rgba(255,255,255,0.52); font-size: 0.875rem; line-height: 1.82; margin: 0; white-space: pre-wrap; }
-
-.breakdown-table { width: 100%; border-collapse: collapse; margin: 0.9rem 0; }
-.breakdown-table th {
-    font-size: 0.56rem; font-weight: 700; letter-spacing: 0.16em;
-    text-transform: uppercase; color: rgba(255,255,255,0.22);
-    padding: 0 0 0.8rem; text-align: left;
-    border-bottom: 1px solid rgba(255,255,255,0.07);
     font-family: 'Inter', sans-serif;
 }
-.breakdown-table td {
-    padding: 0.7rem 0; font-size: 0.84rem; color: rgba(255,255,255,0.52);
-    border-bottom: 1px solid rgba(255,255,255,0.05); vertical-align: middle;
-    font-family: 'Inter', sans-serif;
+.pat-metric-trend { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.02em; font-family: 'Inter', sans-serif; }
+.pat-trend-up   { color: #00E5A0; }
+.pat-trend-down { color: #FF3D71; }
+.pat-trend-flat { color: rgba(255,255,255,0.28); }
+.pat-metric-val {
+    font-family: 'Inter', sans-serif; font-size: 1.7rem; font-weight: 800;
+    line-height: 1; letter-spacing: -0.02em; margin-bottom: 1rem;
 }
-.breakdown-table td:not(:first-child) { text-align: right; color: rgba(255,255,255,0.32); }
-.breakdown-table tr:last-child td { border-bottom: none; }
-.breakdown-table tr:hover td { background: rgba(255,255,255,0.02); color: rgba(255,255,255,0.70); }
-.breakdown-table tr:hover td:not(:first-child) { color: rgba(255,255,255,0.45); }
+.pm-views .pat-metric-val { color: #BB00FF; }
+.pm-ret   .pat-metric-val { color: #0099FF; }
+.pm-save  .pat-metric-val { color: #00E5A0; }
+.pm-hook  .pat-metric-val { color: #FFB020; }
+.pat-metric-bar  { height: 3px; background: rgba(255,255,255,0.06); overflow: hidden; }
+.pat-metric-fill { height: 100%; transition: width 0.6s ease; }
+.pm-views .pat-metric-fill { background: linear-gradient(90deg, #6600CC, #BB00FF); }
+.pm-ret   .pat-metric-fill { background: linear-gradient(90deg, #0055BB, #0099FF); }
+.pm-save  .pat-metric-fill { background: linear-gradient(90deg, #008855, #00E5A0); }
+.pm-hook  .pat-metric-fill { background: linear-gradient(90deg, #AA6600, #FFB020); }
 
-.top-reel-card {
+/* ── Content / Hook List Cards ── */
+.ct-list-card {
     background: #111111; border: 1px solid rgba(255,255,255,0.07);
-    border-left: 2px solid #00E5A0;
-    padding: 1rem 1.25rem; margin-bottom: 2px;
-    transition: background 0.15s;
+    margin-bottom: 2px; overflow: hidden; transition: background 0.15s;
 }
-.top-reel-card:hover { background: #111111; }
-.top-reel-card .reel-caption {
-    font-size: 0.875rem; color: rgba(255,255,255,0.70); font-weight: 500;
-    margin-bottom: 0.42rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+.ct-list-card:hover { background: #151515; }
+.ct-list-card.ct-top { border-left: 2px solid #00E5A0; }
+.ct-list-card.ct-mid { border-left: 2px solid #FFB020; }
+.ct-list-card.ct-low { border-left: 2px solid rgba(255,255,255,0.14); }
+.ct-row { display: flex; align-items: center; padding: 0.9rem 1.25rem; gap: 1rem; flex-wrap: wrap; }
+.ct-name {
+    font-size: 0.875rem; font-weight: 600; color: rgba(255,255,255,0.80);
+    min-width: 110px; flex-shrink: 0; font-family: 'Inter', sans-serif;
 }
-.top-reel-card .reel-stats { font-size: 0.72rem; color: rgba(255,255,255,0.26); }
-.reel-stat-pill {
-    display: inline-block; background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 0; padding: 0.18rem 0.6rem; margin-right: 0.4rem;
+.ct-stats { display: flex; gap: 1.6rem; flex: 1; flex-wrap: wrap; }
+.ct-stat  { display: flex; flex-direction: column; align-items: center; min-width: 44px; }
+.ct-stat-val {
+    font-size: 0.875rem; font-weight: 700; color: rgba(255,255,255,0.72);
+    font-family: 'Inter', sans-serif;
 }
-.under-card { border-left-color: #FF3D71 !important; }
+.ct-stat-lbl {
+    font-size: 0.50rem; font-weight: 700; letter-spacing: 0.10em;
+    text-transform: uppercase; color: rgba(255,255,255,0.22); margin-top: 0.15rem;
+}
+.ct-count-badge {
+    font-size: 0.68rem; color: rgba(255,255,255,0.22);
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.07);
+    padding: 0.18rem 0.62rem; flex-shrink: 0; font-family: 'Inter', sans-serif;
+}
+.ct-bar-track { height: 2px; background: rgba(255,255,255,0.04); }
+.ct-bar-fill  { height: 100%; background: linear-gradient(90deg, rgba(131,58,180,0.5), rgba(225,48,108,0.5)); }
+
+/* ── Performance Spectrum ── */
+.perf-spectrum { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; margin-top: 0.9rem; }
+@media (max-width: 640px) { .perf-spectrum { grid-template-columns: 1fr; } }
+.perf-col-header {
+    font-size: 0.56rem; font-weight: 800; letter-spacing: 0.18em;
+    text-transform: uppercase; padding: 0.6rem 1rem; margin-bottom: 2px;
+    font-family: 'Inter', sans-serif;
+}
+.perf-top-header   { background: rgba(0,229,160,0.06); border: 1px solid rgba(0,229,160,0.14); color: #00E5A0; }
+.perf-under-header { background: rgba(255,61,113,0.06); border: 1px solid rgba(255,61,113,0.14); color: #FF3D71; }
+.perf-video-card {
+    display: flex; gap: 0.9rem; padding: 0.85rem;
+    background: #111111; border: 1px solid rgba(255,255,255,0.06);
+    margin-bottom: 2px; transition: background 0.15s;
+}
+.perf-video-card:hover { background: #151515; }
+.perf-thumb {
+    width: 56px; flex-shrink: 0; aspect-ratio: 9/16;
+    background: #050505; border: 1px solid rgba(255,255,255,0.07);
+    display: flex; align-items: center; justify-content: center;
+}
+.perf-thumb-icon { font-size: 1rem; opacity: 0.18; }
+.perf-card-body  { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: space-between; }
+.perf-title {
+    font-size: 0.78rem; font-weight: 500; color: rgba(255,255,255,0.70);
+    line-height: 1.45; margin-bottom: 0.55rem;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.perf-stat-row { display: flex; gap: 0.5rem; }
+.perf-stat {
+    display: flex; flex-direction: column; align-items: center;
+    background: rgba(255,255,255,0.04); padding: 0.28rem 0.55rem; min-width: 38px;
+}
+.ps-val { font-size: 0.70rem; font-weight: 700; color: rgba(255,255,255,0.72); font-family: 'Inter', sans-serif; line-height: 1; }
+.ps-lbl { font-size: 0.46rem; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase; color: rgba(255,255,255,0.22); margin-top: 0.18rem; }
+.perf-empty { font-size: 0.78rem; color: rgba(255,255,255,0.18); padding: 1.2rem 1rem; font-style: italic; }
+
+/* ── Patterns action buttons — sleek 1px ghost ── */
+.pat-refresh-btn > div > button,
+.pat-regen-btn > div > button {
+    background: transparent !important;
+    border: 1px solid rgba(255,255,255,0.12) !important;
+    color: rgba(255,255,255,0.40) !important;
+    border-radius: 6px !important;
+    font-size: 0.75rem !important; font-weight: 500 !important;
+    padding: 0.38rem 1.1rem !important;
+    text-transform: none !important; letter-spacing: 0.02em !important;
+    transition: all 0.18s ease !important;
+}
+.pat-refresh-btn > div > button:hover,
+.pat-regen-btn > div > button:hover {
+    border-color: rgba(131,58,180,0.38) !important;
+    color: rgba(255,255,255,0.75) !important;
+    background: rgba(131,58,180,0.08) !important;
+}
 
 .trend-badge {
     display: inline-flex; align-items: center; gap: 0.45rem;
@@ -1999,6 +2052,15 @@ def render_single_reel():
 # ─────────────────────────────────────────────────
 # MY PATTERNS TAB
 # ─────────────────────────────────────────────────
+def _fmt_k(v: float) -> str:
+    """Format a number as 1.2k, 14.5k, 1.2M etc."""
+    if v >= 1_000_000:
+        return f"{v/1_000_000:.1f}M"
+    if v >= 1_000:
+        return f"{v/1_000:.1f}k"
+    return f"{v:,.0f}"
+
+
 def render_patterns():
     st.markdown("""
     <div class="patterns-hero">
@@ -2025,8 +2087,8 @@ def render_patterns():
 
     col_r, _ = st.columns([1, 4])
     with col_r:
-        st.markdown('<div class="ghost-btn">', unsafe_allow_html=True)
-        if st.button("🔄 Refresh", key="patterns_refresh"):
+        st.markdown('<div class="pat-refresh-btn">', unsafe_allow_html=True)
+        if st.button("↺  Refresh", key="patterns_refresh"):
             st.session_state.patterns_loaded = False
             st.session_state.patterns_data = None
             st.session_state.patterns_insights = None
@@ -2047,47 +2109,84 @@ def render_patterns():
         """, unsafe_allow_html=True)
         return
 
-    b = patterns["benchmarks"]
+    b     = patterns["benchmarks"]
     count = patterns["count"]
+    trend = patterns.get("trend", {})
+
+    # ── Trend indicator for views card ──────────────────────────────────
+    chg = trend.get("change_pct", 0)
+    if trend:
+        if chg > 3:
+            views_trend = f'<span class="pat-metric-trend pat-trend-up">▲ +{chg:.0f}%</span>'
+        elif chg < -3:
+            views_trend = f'<span class="pat-metric-trend pat-trend-down">▼ {chg:.0f}%</span>'
+        else:
+            views_trend = '<span class="pat-metric-trend pat-trend-flat">→ Steady</span>'
+    else:
+        views_trend = ""
+
+    # ── Grade labels for other cards ────────────────────────────────────
+    ret_pct  = b["avg_retention"] * 100
+    save_pct = b["avg_save_rate"] * 100
+    hook_val = b["avg_hook"]
+
+    def grade_span(val, hi, mid):
+        if val >= hi:
+            return '<span class="pat-metric-trend pat-trend-up">Strong</span>'
+        if val >= mid:
+            return '<span class="pat-metric-trend pat-trend-flat">Solid</span>'
+        return '<span class="pat-metric-trend pat-trend-down">Low</span>'
+
+    ret_grade  = grade_span(ret_pct,  40, 25)
+    save_grade = grade_span(save_pct,  3,  1)
+    hook_grade = grade_span(hook_val, 70, 50)
+
+    # ── Gradient bar fill widths ─────────────────────────────────────────
+    views_fill = min(100, max(15, 40 + chg))
+    ret_fill   = min(100, ret_pct  * 1.4)
+    save_fill  = min(100, save_pct * 18)
+    hook_fill  = min(100, hook_val)
 
     st.markdown(f'<div class="section-label">Your averages across {count} reels</div>', unsafe_allow_html=True)
     st.markdown(f"""
-    <div class="bench-grid">
-        <div class="bench-card bench-views">
-            <div class="bench-val">{b['avg_views']:,.0f}</div>
-            <div class="bench-label">Avg Views</div>
+    <div class="pat-metrics-grid">
+        <div class="pat-metric-card pm-views">
+            <div class="pat-metric-top">
+                <span class="pat-metric-label">Avg Views</span>
+                {views_trend}
+            </div>
+            <div class="pat-metric-val">{_fmt_k(b['avg_views'])}</div>
+            <div class="pat-metric-bar"><div class="pat-metric-fill" style="width:{views_fill:.0f}%"></div></div>
         </div>
-        <div class="bench-card bench-ret">
-            <div class="bench-val">{b['avg_retention']*100:.1f}%</div>
-            <div class="bench-label">Avg Retention</div>
+        <div class="pat-metric-card pm-ret">
+            <div class="pat-metric-top">
+                <span class="pat-metric-label">Avg Retention</span>
+                {ret_grade}
+            </div>
+            <div class="pat-metric-val">{ret_pct:.1f}%</div>
+            <div class="pat-metric-bar"><div class="pat-metric-fill" style="width:{ret_fill:.0f}%"></div></div>
         </div>
-        <div class="bench-card bench-eng">
-            <div class="bench-val">{b['avg_engagement']*100:.2f}%</div>
-            <div class="bench-label">Avg Engagement</div>
+        <div class="pat-metric-card pm-save">
+            <div class="pat-metric-top">
+                <span class="pat-metric-label">Save Rate</span>
+                {save_grade}
+            </div>
+            <div class="pat-metric-val">{save_pct:.2f}%</div>
+            <div class="pat-metric-bar"><div class="pat-metric-fill" style="width:{save_fill:.0f}%"></div></div>
         </div>
-        <div class="bench-card bench-save">
-            <div class="bench-val">{b['avg_save_rate']*100:.2f}%</div>
-            <div class="bench-label">Avg Save Rate</div>
+        <div class="pat-metric-card pm-hook">
+            <div class="pat-metric-top">
+                <span class="pat-metric-label">Hook Score</span>
+                {hook_grade}
+            </div>
+            <div class="pat-metric-val">{hook_val:.0f}</div>
+            <div class="pat-metric-bar"><div class="pat-metric-fill" style="width:{hook_fill:.0f}%"></div></div>
         </div>
     </div>
     """, unsafe_allow_html=True)
 
-    trend = patterns.get("trend", {})
-    if trend:
-        chg = trend["change_pct"]
-        if chg > 5:
-            badge_cls, arrow, label = "trend-up",   "▲", f"+{chg:.0f}% vs earlier reels"
-        elif chg < -5:
-            badge_cls, arrow, label = "trend-down", "▼", f"{chg:.0f}% vs earlier reels"
-        else:
-            badge_cls, arrow, label = "trend-flat", "→", "Steady vs earlier reels"
-        st.markdown(f"""
-        <div style="margin: 0.6rem 0 1.75rem;">
-            <span class="trend-badge {badge_cls}">{arrow} {label}</span>
-        </div>
-        """, unsafe_allow_html=True)
-
-    st.markdown('<div class="section-label">What your data is telling you</div>', unsafe_allow_html=True)
+    # ── AI Insights ──────────────────────────────────────────────────────
+    st.markdown('<div class="section-label" style="margin-top:1.5rem;">What your data is telling you</div>', unsafe_allow_html=True)
 
     if st.session_state.patterns_insights is None:
         if st.button("✨ Generate AI Insights + Priority Roadmap", key="gen_insights_btn"):
@@ -2131,94 +2230,115 @@ def render_patterns():
                 </div>
                 """, unsafe_allow_html=True)
 
-        st.markdown('<div class="ghost-btn">', unsafe_allow_html=True)
-        if st.button("🔁 Regenerate Insights", key="regen_insights_btn"):
+        st.markdown('<div class="pat-regen-btn">', unsafe_allow_html=True)
+        if st.button("↺  Regenerate Insights", key="regen_insights_btn"):
             st.session_state.patterns_insights = None
             st.session_state.patterns_roadmap  = None
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
 
+    # ── Content Type List Cards ──────────────────────────────────────────
     cat_summary = patterns.get("category_summary", [])
     if cat_summary:
         st.markdown('<div class="section-label" style="margin-top:2rem;">Content Type Breakdown</div>', unsafe_allow_html=True)
-        rows_html = ""
-        for row in cat_summary:
-            rows_html += f"""
-            <tr>
-                <td><strong style="color:rgba(255,255,255,0.70);">{row['category']}</strong></td>
-                <td>{row['count']}</td>
-                <td>{row['avg_views']:,.0f}</td>
-                <td>{row['avg_saves']:.1f}</td>
-                <td>{row['avg_retention']*100:.1f}%</td>
-            </tr>"""
-        st.markdown(f"""
-        <table class="breakdown-table">
-            <thead><tr>
-                <th>Category</th><th>Reels</th>
-                <th>Avg Views</th><th>Avg Saves</th><th>Avg Retention</th>
-            </tr></thead>
-            <tbody>{rows_html}</tbody>
-        </table>
-        """, unsafe_allow_html=True)
+        max_cat_views = max((r["avg_views"] for r in cat_summary), default=1) or 1
+        cards_html = ""
+        for i, row in enumerate(cat_summary):
+            rank_cls = "ct-top" if i == 0 else ("ct-mid" if i == 1 else "ct-low")
+            fill_w   = (row["avg_views"] / max_cat_views) * 100
+            n        = row["count"]
+            cards_html += f"""
+            <div class="ct-list-card {rank_cls}">
+                <div class="ct-row">
+                    <div class="ct-name">{row['category']}</div>
+                    <div class="ct-stats">
+                        <span class="ct-stat">
+                            <span class="ct-stat-val">{_fmt_k(row['avg_views'])}</span>
+                            <span class="ct-stat-lbl">Views</span>
+                        </span>
+                        <span class="ct-stat">
+                            <span class="ct-stat-val">{row['avg_saves']:.1f}</span>
+                            <span class="ct-stat-lbl">Saves</span>
+                        </span>
+                        <span class="ct-stat">
+                            <span class="ct-stat-val">{row['avg_retention']*100:.0f}%</span>
+                            <span class="ct-stat-lbl">Ret.</span>
+                        </span>
+                    </div>
+                    <span class="ct-count-badge">{n} reel{"s" if n != 1 else ""}</span>
+                </div>
+                <div class="ct-bar-track"><div class="ct-bar-fill" style="width:{fill_w:.0f}%"></div></div>
+            </div>"""
+        st.markdown(cards_html, unsafe_allow_html=True)
 
+    # ── Hook Type List Cards ─────────────────────────────────────────────
     hook_summary = patterns.get("hook_summary", [])
     if len(hook_summary) > 1:
-        st.markdown('<div class="section-label" style="margin-top:2rem;">Hook Type Breakdown</div>', unsafe_allow_html=True)
-        rows_html = ""
-        for row in hook_summary:
-            rows_html += f"""
-            <tr>
-                <td><strong style="color:rgba(255,255,255,0.70);">{row['hook_type']}</strong></td>
-                <td>{row['count']}</td>
-                <td>{row['avg_hook_score']:.1f}</td>
-                <td>{row['avg_retention']*100:.1f}%</td>
-            </tr>"""
-        st.markdown(f"""
-        <table class="breakdown-table">
-            <thead><tr>
-                <th>Hook Type</th><th>Reels</th>
-                <th>Avg Hook Score</th><th>Avg Retention</th>
-            </tr></thead>
-            <tbody>{rows_html}</tbody>
-        </table>
-        """, unsafe_allow_html=True)
-
-    top = patterns.get("top_performers", [])
-    if top:
-        st.markdown('<div class="section-label" style="margin-top:2rem;">Top Performers</div>', unsafe_allow_html=True)
-        for r in top:
-            caption = r.get("caption") or r.get("category") or "Untitled"
-            st.markdown(f"""
-            <div class="top-reel-card">
-                <div class="reel-caption">{caption[:90]}</div>
-                <div class="reel-stats">
-                    <span class="reel-stat-pill">👁 {r.get('views',0):,} views</span>
-                    <span class="reel-stat-pill">💾 {r.get('saves',0):,} saves</span>
-                    <span class="reel-stat-pill">📊 {(r.get('retention_ratio') or 0)*100:.0f}% retention</span>
+        st.markdown('<div class="section-label" style="margin-top:2rem;">Hook Performance</div>', unsafe_allow_html=True)
+        max_hs = max((r["avg_hook_score"] for r in hook_summary), default=1) or 1
+        cards_html = ""
+        for i, row in enumerate(hook_summary):
+            rank_cls = "ct-top" if i == 0 else ("ct-mid" if i == 1 else "ct-low")
+            fill_w   = (row["avg_hook_score"] / max_hs) * 100
+            n        = row["count"]
+            cards_html += f"""
+            <div class="ct-list-card {rank_cls}">
+                <div class="ct-row">
+                    <div class="ct-name">{row['hook_type']}</div>
+                    <div class="ct-stats">
+                        <span class="ct-stat">
+                            <span class="ct-stat-val">{row['avg_hook_score']:.1f}</span>
+                            <span class="ct-stat-lbl">Hook Score</span>
+                        </span>
+                        <span class="ct-stat">
+                            <span class="ct-stat-val">{row['avg_retention']*100:.0f}%</span>
+                            <span class="ct-stat-lbl">Retention</span>
+                        </span>
+                    </div>
+                    <span class="ct-count-badge">{n} reel{"s" if n != 1 else ""}</span>
                 </div>
-            </div>
-            """, unsafe_allow_html=True)
+                <div class="ct-bar-track"><div class="ct-bar-fill" style="width:{fill_w:.0f}%"></div></div>
+            </div>"""
+        st.markdown(cards_html, unsafe_allow_html=True)
 
+    # ── Performance Spectrum ─────────────────────────────────────────────
+    top   = patterns.get("top_performers", [])
     under = patterns.get("underperformers", [])
-    if under:
-        st.markdown(
-            f'<div class="section-label" style="margin-top:2rem;">Underperformers '
-            f'<span style="color:rgba(255,255,255,0.18);font-weight:400;text-transform:none;letter-spacing:0;">'
-            f'(under {b["avg_views"]*0.6:,.0f} views)</span></div>',
-            unsafe_allow_html=True,
-        )
-        for r in under:
-            caption = r.get("caption") or r.get("category") or "Untitled"
-            st.markdown(f"""
-            <div class="top-reel-card under-card">
-                <div class="reel-caption">{caption[:90]}</div>
-                <div class="reel-stats">
-                    <span class="reel-stat-pill">👁 {r.get('views',0):,} views</span>
-                    <span class="reel-stat-pill">💾 {r.get('saves',0):,} saves</span>
-                    <span class="reel-stat-pill">📊 {(r.get('retention_ratio') or 0)*100:.0f}% retention</span>
+    if top or under:
+        st.markdown('<div class="section-label" style="margin-top:2rem;">Performance Spectrum</div>', unsafe_allow_html=True)
+
+        def _video_card(r: dict) -> str:
+            caption   = (r.get("caption") or r.get("category") or "Untitled Reel")[:80]
+            views     = r.get("views", 0)
+            saves     = r.get("saves", 0)
+            ret       = (r.get("retention_ratio") or 0) * 100
+            return f"""
+            <div class="perf-video-card">
+                <div class="perf-thumb"><span class="perf-thumb-icon">▶</span></div>
+                <div class="perf-card-body">
+                    <div class="perf-title">{caption}</div>
+                    <div class="perf-stat-row">
+                        <div class="perf-stat"><div class="ps-val">{_fmt_k(views)}</div><div class="ps-lbl">Views</div></div>
+                        <div class="perf-stat"><div class="ps-val">{saves}</div><div class="ps-lbl">Saves</div></div>
+                        <div class="perf-stat"><div class="ps-val">{ret:.0f}%</div><div class="ps-lbl">Ret.</div></div>
+                    </div>
                 </div>
+            </div>"""
+
+        top_html   = "".join(_video_card(r) for r in top[:3])
+        under_html = "".join(_video_card(r) for r in under[:3])
+        st.markdown(f"""
+        <div class="perf-spectrum">
+            <div class="perf-col">
+                <div class="perf-col-header perf-top-header">▲  Top Performers</div>
+                {top_html or '<div class="perf-empty">No top performers yet</div>'}
             </div>
-            """, unsafe_allow_html=True)
+            <div class="perf-col">
+                <div class="perf-col-header perf-under-header">▼  Underperformers</div>
+                {under_html or '<div class="perf-empty">All reels are performing well!</div>'}
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
 
 # ─────────────────────────────────────────────────
